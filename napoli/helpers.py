@@ -1,11 +1,14 @@
 
+# -*- coding: utf-8 -*- 
 import warnings
 from pyspark.sql.window import Window
 from pyspark.sql import functions as fn
 
 
 def readRDD(spark, dirstring, small, column_name):
-    if small:
+    if small == True:
+        print('Using small set...')
+        print('')
         dir = dirstring + '/ml-latest-small/'
         column_names = ['movies','ratings','links','tags']
         # Load into DataFrame
@@ -22,12 +25,14 @@ def readRDD(spark, dirstring, small, column_name):
             warnings.warn('Warning Message: Column name not found; opting for ratings')
             return spark.read.csv(dir + 'ratings.csv', header=True, schema='userId INT, movieId INT, rating FLOAT, timestamp INT'), 'ratings'
     else:
+        print('Using large set...')
+        print('')
         dir = dirstring + '/ml-latest/'
         column_names = ['movies','ratings','links','tags','genome-tags','genome-scores']
         # Load into DataFrame
         if column_name in column_names:
             if column_name == 'movies':
-                return spark.read.csv(dir + 'movies.csv', header=True, schema='movieId INT, title STRING, genres STRING'), column_name
+               return spark.read.csv(dir + 'movies.csv', header=True, schema='movieId INT, title STRING, genres STRING'), column_name
             elif column_name == 'links':
                 return spark.read.csv(dir + 'links.csv', header=True, schema='movieId INT, imdbId FLOAT, tmdbId FLOAT'), column_name
             elif column_name == 'ratings':
@@ -49,7 +54,7 @@ def ratings_split(rdd, upper_lim, lower_lim):
             .withColumn('row_number', fn.row_number().over(windowSpec)) \
             .withColumn('n_ratings', fn.count('rating').over(windowSpec)) \
             .withColumn('prop_idx', (fn.col('row_number') / fn.col('n_ratings')))
-    ratings.show()
+    ratings.show(20)
 
     ratings_train = ratings.filter(ratings.prop_idx <= lower_lim).drop('row_number','n_ratings','prop_idx')
     ratings_validation = ratings.filter((ratings.prop_idx > lower_lim) & (ratings.prop_idx <= upper_lim)).drop('row_number','n_ratings','prop_idx') 

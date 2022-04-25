@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import sys
 from . import helpers
 
 def napoliSplit(spark, dirstring, small, column_name, upper_lim = 0.9, lower_lim = 0.8):
@@ -12,6 +13,9 @@ def napoliSplit(spark, dirstring, small, column_name, upper_lim = 0.9, lower_lim
    # TODO implement for others?
     if verified_column_name == 'ratings':
             return helpers.ratings_split(rdd, upper_lim, lower_lim)
+    else:
+        print('Something wrong??')
+        sys.exit('WTF is this')
       
 
 # https://docs.python-guide.org/writing/structure/

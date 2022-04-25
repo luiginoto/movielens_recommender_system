@@ -1,9 +1,11 @@
+# -*- coding: utf-8 -*- 
 #Use getpass to obtain user netID
 import getpass
 
 # And pyspark.sql to get the spark session
 from pyspark.sql import SparkSession
 import napoli
+#import ALS_custom
 
 
 def main(spark, in_path, out_path):
@@ -17,11 +19,13 @@ def main(spark, in_path, out_path):
     print('')
 
 	# TODO will have to change implementation of napoliSplit if we want a terminal written for in_path argument --> edit readRDD.py helper function
-    ratings_train, ratings_test, ratings_validation = napoli.napoliSplit(spark, in_path, small=True, column_name = 'ratings', upper_lim = 0.9, lower_lim = 0.8)
+    ratings_train, ratings_test, ratings_validation = napoli.napoliSplit(spark, in_path, small=False, column_name = 'ratings', upper_lim = 0.9, lower_lim = 0.8)
 
     ratings_train.write.csv(f'{out_path}/ratings_train.csv')
     ratings_validation.write.csv(f'{out_path}/ratings_validation.csv')
     ratings_test.write.csv(f'{out_path}/ratings_test.csv')
+
+    #als_model = ALS_custom.alsDF(ratings_train, ratings_test, maxIter=5, userCol="userId", itemCol="movieId", ratingCol="rating")
 
    
     
