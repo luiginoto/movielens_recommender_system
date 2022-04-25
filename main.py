@@ -4,6 +4,7 @@ import getpass
 # And pyspark.sql to get the spark session
 from pyspark.sql import SparkSession
 import pyspark.sql.functions as F
+from pyspark import SparkContext
 import napoli
 
 
@@ -15,8 +16,10 @@ def main(spark, in_path, out_path):
     netID : string, netID of student to find files in HDFS
     '''
     print('LOADING....')
+    print('')
+
 	# TODO will have to change implementation of napoliSplit if we want a terminal written for in_path argument --> edit readRDD.py helper function
-    ratings_train, ratings_test, ratings_validation = napoli.napoliSplit(in_path, small=True, column_name = 'ratings', upper_lim = 0.9, lower_lim = 0.8)
+    ratings_train, ratings_test, ratings_validation = napoli.napoliSplit(spark, in_path, small=True, column_name = 'ratings', upper_lim = 0.9, lower_lim = 0.8)
 
     ratings_train.write.csv(f'{out_path}/ratings_train.csv')
     ratings_validation.write.csv(f'{out_path}/ratings_validation.csv')
@@ -28,7 +31,9 @@ def main(spark, in_path, out_path):
 if __name__ == "__main__":
 
     # Create the spark session object
-    spark = SparkSession.builder.appName('project').getOrCreate()
+    spark = SparkSession.builder.appName('project').config('spark.submit.pyFiles', 'Group26_MovieLens-0.1.0-py3-none-any.zip').getOrCreate()
+    # https://stackoverflow.com/questions/36461054/i-cant-seem-to-get-py-files-on-spark-to-work
+    spark.sparkContext.addPyFile("Group26_MovieLens-0.1.0-py3-none-any.zip")
 
     # Get user netID from the command line
     netID = getpass.getuser()

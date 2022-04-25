@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from . import helpers
 
-def napoliSplit(dirstring, small, column_name, upper_lim = 0.9, lower_lim = 0.8):
+def napoliSplit(spark, dirstring, small, column_name, upper_lim = 0.9, lower_lim = 0.8):
     # TODO you can do error checking for prop limits here if needed, i.e if lower greater than upper, is valid, etc
-    rdd, verified_column_name = helpers.readRDD(dirstring, small, column_name)
+    rdd, verified_column_name = helpers.readRDD(spark, dirstring, small, column_name)
 
     # TODO for referenc for now
     print('Printing schema')

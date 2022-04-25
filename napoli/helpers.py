@@ -2,10 +2,9 @@
 import warnings
 from pyspark.sql.window import Window
 from pyspark.sql import functions as fn
-from pyspark.sql import SparkSession
-spark = SparkSession.builder.appName('project').getOrCreate()
 
-def readRDD(dirstring, small, column_name):
+
+def readRDD(spark, dirstring, small, column_name):
     if small:
         dir = dirstring + '/ml-latest-small/'
         column_names = ['movies','ratings','links','tags']
