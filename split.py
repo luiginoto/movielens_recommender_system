@@ -38,7 +38,7 @@ def main(spark, in_path, out_path):
     ratings_val_test = ratings.filter(ratings.prop_idx > 0.8).drop('row_number', 'n_ratings', 'prop_idx')
     distinct_user_ids = [x.userId for x in ratings_val_test.select('userId').distinct().collect()]
 
-    ratings_validation = ratings_val_test.filter(ratings.userId in np.random.choice(distinct_user_ids, len(distinct_user_ids)//2, replace=False))
+    ratings_validation = ratings_val_test.filter(ratings.userId.isin(np.random.choice(distinct_user_ids, len(distinct_user_ids)//2, replace=False)))
     ratings_test = ratings_val_test.subtract(ratings_validation)
 
     # ratings_validation = ratings.filter((ratings.prop_idx > 0.8) & (ratings.prop_idx <= 0.9)).drop('row_number', 'n_ratings', 'prop_idx')
