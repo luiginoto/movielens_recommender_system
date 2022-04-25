@@ -21,14 +21,15 @@ def main(spark, in_path, out_path):
                              header=True,
                              schema='userId INT, movieId INT, rating FLOAT, timestamp INT')
     
-    print('Printing ratings inferred schema')
+    print('Printing ratings schema')
     ratings.printSchema()
     
     windowSpec  = Window.partitionBy('userId').orderBy('timestamp')
     
-    ratings = ratings.withColumn('row_number', fn.row_number().over(windowSpec))
-    ratings = ratings.withColumn('count', fn.count('rating').over(windowSpec))
-    ratings = ratings.withColumn('prop_idx', ratings.row_number / ratings.count)
+    ratings = ratings \
+            .withColumn('row_number', fn.row_number().over(windowSpec)) \
+            .withColumn('n_ratings', fn.count('rating').over(windowSpec)) \
+            .withColumn('prop_idx', (fn.col('row_number') / fn.col('n_ratings')))
     ratings.show()
     
     ratings_train = ratings.filter(ratings.prop_idx <= 0.8)
