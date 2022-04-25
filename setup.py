@@ -20,5 +20,5 @@ setup(
     author_email='ga947@nyu.edu',
     url='https://github.com/nyu-big-data/final-project-group-26',
     license=license,
-    packages=find_packages(exclude=('tests', 'scratch', 'src'))
+    packages=find_packages(exclude=('tests', 'scratch', 'data'))
 )
