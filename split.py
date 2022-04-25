@@ -32,9 +32,9 @@ def main(spark, in_path, out_path):
             .withColumn('prop_idx', (fn.col('row_number') / fn.col('n_ratings')))
     ratings.show()
     
-    ratings_train = ratings.filter(ratings.prop_idx <= 0.8)
-    ratings_validation = ratings.filter((ratings.prop_idx > 0.8) & (ratings.prop_idx <= 0.9)) 
-    ratings_test = ratings.filter((ratings.prop_idx > 0.9) & (ratings.prop_idx <= 1)) 
+    ratings_train = ratings.filter(ratings.prop_idx <= 0.8).drop('row_number', 'n_ratings', 'prop_idx')
+    ratings_validation = ratings.filter((ratings.prop_idx > 0.8) & (ratings.prop_idx <= 0.9)).drop('row_number', 'n_ratings', 'prop_idx')
+    ratings_test = ratings.filter((ratings.prop_idx > 0.9) & (ratings.prop_idx <= 1)).drop('row_number', 'n_ratings', 'prop_idx')
     
     ratings_train.write.csv(f'{out_path}/ratings_train.csv')
     ratings_validation.write.csv(f'{out_path}/ratings_validation.csv')
@@ -46,7 +46,7 @@ def main(spark, in_path, out_path):
 if __name__ == "__main__":
 
     # Create the spark session object
-    spark = SparkSession.builder.appName('part1').getOrCreate()
+    spark = SparkSession.builder.appName('dataset_split').getOrCreate()
 
     # Get path of ratings file
     in_path = sys.argv[1]
