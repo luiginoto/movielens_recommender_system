@@ -3,8 +3,6 @@ import getpass
 
 # And pyspark.sql to get the spark session
 from pyspark.sql import SparkSession
-import pyspark.sql.functions as F
-from pyspark import SparkContext
 import napoli
 
 
@@ -32,8 +30,9 @@ if __name__ == "__main__":
 
     # Create the spark session object
     spark = SparkSession.builder.appName('project').config('spark.submit.pyFiles', 'Group26_MovieLens-0.1.0-py3-none-any.zip').getOrCreate()
+
     # https://stackoverflow.com/questions/36461054/i-cant-seem-to-get-py-files-on-spark-to-work
-    spark.sparkContext.addPyFile("Group26_MovieLens-0.1.0-py3-none-any.zip")
+    #spark.sparkContext.addPyFile("Group26_MovieLens-0.1.0-py3-none-any.zip")
 
     # Get user netID from the command line
     netID = getpass.getuser()
