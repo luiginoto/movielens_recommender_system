@@ -1,8 +1,5 @@
 #Use getpass to obtain user netID
 import getpass
-from os import truncate
-from statistics import median
-import sys
 
 # And pyspark.sql to get the spark session
 from pyspark.sql import SparkSession
@@ -19,7 +16,7 @@ def main(spark, in_path, out_path):
     '''
     print('LOADING....')
 	# TODO will have to change implementation of napoliSplit if we want a terminal written for in_path argument --> edit readRDD.py helper function
-    ratings_train, ratings_test, ratings_validation = napoli.napoliSplit(in_path, small=True, column_name = 'ratings', upper_prop = 0.9, lower_prop = 0.8)
+    ratings_train, ratings_test, ratings_validation = napoli.napoliSplit(in_path, small=True, column_name = 'ratings', upper_lim = 0.9, lower_lim = 0.8)
 
     ratings_train.write.csv(f'{out_path}/ratings_train.csv')
     ratings_validation.write.csv(f'{out_path}/ratings_validation.csv')

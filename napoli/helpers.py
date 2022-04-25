@@ -50,9 +50,9 @@ def ratings_split(rdd, upper_lim, lower_lim):
             .withColumn('prop_idx', (fn.col('row_number') / fn.col('n_ratings')))
     ratings.show()
 
-    ratings_train = ratings.filter(ratings.prop_idx <= lower_lim)
-    ratings_validation = ratings.filter((ratings.prop_idx > lower_lim) & (ratings.prop_idx <= upper_lim)) 
-    ratings_test = ratings.filter((ratings.prop_idx > upper_lim) & (ratings.prop_idx <= 1.0))
+    ratings_train = ratings.filter(ratings.prop_idx <= lower_lim).drop('row_number','n_ratings','prop_idx')
+    ratings_validation = ratings.filter((ratings.prop_idx > lower_lim) & (ratings.prop_idx <= upper_lim)).drop('row_number','n_ratings','prop_idx') 
+    ratings_test = ratings.filter((ratings.prop_idx > upper_lim) & (ratings.prop_idx <= 1.0)).drop('row_number','n_ratings','prop_idx')
 
     return ratings_train, ratings_test, ratings_validation
 
