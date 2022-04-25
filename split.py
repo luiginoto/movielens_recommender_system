@@ -16,8 +16,6 @@ from random import sample
 
 def main(spark, in_path, out_path):
 
-    # path_basename = os.path.basename(os.path.normpath(in_path))
-
     ratings = spark.read.csv(in_path,
                              header=True,
                              schema='userId INT, movieId INT, rating FLOAT, timestamp INT')
@@ -42,13 +40,9 @@ def main(spark, in_path, out_path):
     ratings_validation = ratings_val_test.filter(ratings.userId.isin(sample(distinct_user_ids, len(distinct_user_ids)//2)))
     ratings_test = ratings_val_test.subtract(ratings_validation)
 
-    # ratings_validation = ratings.filter((ratings.prop_idx > 0.8) & (ratings.prop_idx <= 0.9)).drop('row_number', 'n_ratings', 'prop_idx')
-    # ratings_test = ratings.filter((ratings.prop_idx > 0.9) & (ratings.prop_idx <= 1)).drop('row_number', 'n_ratings', 'prop_idx')
-
     ratings_train.write.csv(f'{out_path}/ratings_train.csv')
     ratings_validation.write.csv(f'{out_path}/ratings_validation.csv')
     ratings_test.write.csv(f'{out_path}/ratings_test.csv')
-
 
 
 # Only enter this block if we're in main
