@@ -1,16 +1,18 @@
-# -*- coding: utf-8 -*- 
+# -*- coding: utf-8 -*-
 #Use getpass to obtain user netID
 import getpass
 
 # And pyspark.sql to get the spark session
 from pyspark.sql import SparkSession
 import napoli
+from popularity import PopularityBaseline
 from sklearn.utils import parallel_backend
 from sklearn.model_selection import cross_val_score
 from pyspark.ml.evaluation import RegressionEvaluator
-from pyspark.ml.recommendation import ALS 
+from pyspark.mllib.evaluation import RankingMetrics
+from pyspark.ml.recommendation import ALS
 from pyspark.ml.tuning import CrossValidator, ParamGridBuilder
-from pyspark.sql.functions import isnan
+import pyspark.sql.functions as fn
 
 #import ALS_custom
 
@@ -26,6 +28,7 @@ def main(spark, in_path, out_path):
     print('')
 
 	# TODO will have to change implementation of napoliSplit if we want a terminal written for in_path argument --> edit readRDD.py helper function
+    print('Splitting the ratings dataset into training, validation and test set')
     ratings_train, ratings_test, ratings_validation = napoli.napoliSplit(spark, in_path, small=True, column_name = 'ratings', prop = 0.8)
     ratings_train.show()
 
@@ -36,7 +39,7 @@ def main(spark, in_path, out_path):
     #ratings_test.write.csv(f'{out_path}/ratings_test.csv')
 
     print("Distinct movies: ", ratings_train.select("movieId").distinct().count())
-    print("Distinct users: ", ratings_train.select("userId").distinct().count())    
+    print("Distinct users: ", ratings_train.select("userId").distinct().count())
     print("Total number of ratings: ", ratings_train.count())
 
     ratings_per_user = ratings_train.groupby('userId').agg({"rating":"count"})
@@ -53,16 +56,40 @@ def main(spark, in_path, out_path):
     print("Distinct users in Test set : ", X_test[["userId"]].distinct().count())
     print("Distinct users in Validation set: ", X_val[["userId"]].distinct().count())
 
+    print("Fitting Popularity baseline model")
+    print("Tuning hyperparameters based on Mean Average Precision")
+    damping_values = [0, 5, 10, 15, 20]
+    best_score = 0
+    best_model = None
+    for damping in damping_values:
+        baseline = PopularityBaseline(damping = damping)
+        baseline.fit(X_train)
+        baseline_metrics_val = baseline.evaluate(baseline.results, X_val)
+        val_score = baseline_metrics_val.meanAveragePrecision
+        if val_score > best_score:
+            best_score = val_score
+            best_baseline_model = baseline
+    print('Best Popularity baseline model: ', best_baseline_model)
+
+    print("Evaluating best Popularity baseline model")
+    baseline_metrics_train = baseline.evaluate(best_baseline_model.results, X_train)
+    baseline_metrics_test = baseline.evaluate(best_baseline_model.results, X_test)
+    print("Mean Average Precision on training set: ", baseline_metrics.meanAveragePrecision)
+    print("Mean Average Precision on test set: ", baseline_metrics.meanAveragePrecision)
+
+
+    print("Fitting Latent Factor model with ALS")
     als = ALS(userCol="userId",itemCol="movieId",ratingCol="rating",rank=5, maxIter=10, seed=0)
     model = als.fit(X_train)
 
     # displaying the latent features for 10 users
-    model.userFactors.show(10, truncate = False) 
+    model.userFactors.show(10, truncate = False)
 
     # See users and/or items in the validation dataset that were not part of the training dataset and transform() method implementation of ALS returns NaN for their predictions
-    model.transform(X_val).where(isnan('prediction')).show(5)
+    model.transform(X_val).where(fn.isnan('prediction')).show(5)
     model.transform(X_val[['userId','movieId']]).na.drop()[['prediction']].show()
 
+    print('Evaluating Latent Factor model')
     # establish evaluation metric
     eval=RegressionEvaluator(metricName="rmse",labelCol="rating", predictionCol="prediction")
 
@@ -83,16 +110,16 @@ def main(spark, in_path, out_path):
 
     #  initialize the ALS model
 
-    # create the parameter grid              
+    # create the parameter grid
 
     # instantiating crossvalidator estimator
 
     # now incorporate names of movies to people, essentialy: user xyz would like movieId 123 "abc", in genre tag "a|b|c" in a data structure
-    
 
 
-   
-    
+
+
+
 # Only enter this block if we're in main
 if __name__ == "__main__":
 
@@ -108,7 +135,7 @@ if __name__ == "__main__":
 
 	# Get path of ratings file
     in_path = f'hdfs:/user/{netID}' #sys.argv[1]
-    
+
     # Get destination directory of training, validation and test set files
     out_path = f'hdfs:/user/{netID}' #sys.argv[2]
 
