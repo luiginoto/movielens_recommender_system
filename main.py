@@ -5,7 +5,7 @@ import getpass
 # And pyspark.sql to get the spark session
 from pyspark.sql import SparkSession
 import napoli
-from popularity import PopularityBaseline
+import popularity
 from sklearn.utils import parallel_backend
 from sklearn.model_selection import cross_val_score
 from pyspark.ml.evaluation import RegressionEvaluator
