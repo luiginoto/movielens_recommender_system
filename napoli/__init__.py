@@ -1,4 +1,4 @@
-print(f'Invoking __init__.py for {__name__}')
+print(f'Invoking (custom) __init__.py for {__name__}')
 from .napoliSplit import napoliSplit
 
 # https://stackoverflow.com/questions/12172791/changes-in-import-statement-python3
