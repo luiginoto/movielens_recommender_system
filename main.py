@@ -19,11 +19,11 @@ def main(spark, in_path, out_path):
     print('')
 
 	# TODO will have to change implementation of napoliSplit if we want a terminal written for in_path argument --> edit readRDD.py helper function
-    ratings_train, ratings_test, ratings_validation = napoli.napoliSplit(spark, in_path, small=False, column_name = 'ratings', upper_lim = 0.9, lower_lim = 0.8)
+    ratings_train, ratings_test, ratings_validation = napoli.napoliSplit(spark, in_path, small=False, column_name = 'ratings', prop = 0.8)
 
-    ratings_train.write.csv(f'{out_path}/ratings_train.csv')
-    ratings_validation.write.csv(f'{out_path}/ratings_validation.csv')
-    ratings_test.write.csv(f'{out_path}/ratings_test.csv')
+    #ratings_train.write.csv(f'{out_path}/ratings_train.csv')
+    #ratings_validation.write.csv(f'{out_path}/ratings_validation.csv')
+    #ratings_test.write.csv(f'{out_path}/ratings_test.csv')
 
     #als_model = ALS_custom.alsDF(ratings_train, ratings_test, maxIter=5, userCol="userId", itemCol="movieId", ratingCol="rating")
 
@@ -32,11 +32,12 @@ def main(spark, in_path, out_path):
 # Only enter this block if we're in main
 if __name__ == "__main__":
 
-    # Create the spark session object
-    spark = SparkSession.builder.appName('project').config('spark.submit.pyFiles', 'Group26_MovieLens-0.1.0-py3-none-any.zip').getOrCreate()
-
-    # https://stackoverflow.com/questions/36461054/i-cant-seem-to-get-py-files-on-spark-to-work
-    #spark.sparkContext.addPyFile("Group26_MovieLens-0.1.0-py3-none-any.zip")
+    spark = SparkSession.builder.appName('project')\
+        .config('spark.submit.pyFiles', 'Group26_MovieLens-0.1.0-py3-none-any.zip')\
+        .config('spark.shuffle.useOldFetchProtocol', 'true')\
+        .config('spark.shuffle.service.enabled','true')\
+        .config('dynamicAllocation.enabled', 'true')\
+        .getOrCreate()
 
     # Get user netID from the command line
     netID = getpass.getuser()

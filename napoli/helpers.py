@@ -3,9 +3,11 @@
 import warnings
 from pyspark.sql.window import Window
 from pyspark.sql import functions as fn
+from random import sample
 
 
 def readRDD(spark, dirstring, small, column_name):
+    #TODO instead of manually writing this in, column_names should be read in from spark methods? A lot of repetition here 
     if small == True:
         print('Using small set...')
         print('')
@@ -47,7 +49,7 @@ def readRDD(spark, dirstring, small, column_name):
             warnings.warn('Warning Message: Column name not found; opting for ratings')
             return spark.read.csv(dir + 'ratings.csv', header=True, schema='userId INT, movieId INT, rating FLOAT, timestamp INT'), 'ratings'
 
-def ratings_split(rdd, upper_lim, lower_lim):
+def ratings_split(rdd, prop):
     windowSpec  = Window.partitionBy('userId').orderBy('timestamp')
     
     ratings = rdd \
@@ -56,9 +58,13 @@ def ratings_split(rdd, upper_lim, lower_lim):
             .withColumn('prop_idx', (fn.col('row_number') / fn.col('n_ratings')))
     ratings.show(20)
 
-    ratings_train = ratings.filter(ratings.prop_idx <= lower_lim).drop('row_number','n_ratings','prop_idx')
-    ratings_validation = ratings.filter((ratings.prop_idx > lower_lim) & (ratings.prop_idx <= upper_lim)).drop('row_number','n_ratings','prop_idx') 
-    ratings_test = ratings.filter((ratings.prop_idx > upper_lim) & (ratings.prop_idx <= 1.0)).drop('row_number','n_ratings','prop_idx')
+    ratings_train = ratings.filter(ratings.prop_idx <= prop).drop('row_number', 'n_ratings', 'prop_idx')
+
+    ratings_val_test = ratings.filter(ratings.prop_idx > prop).drop('row_number', 'n_ratings', 'prop_idx')
+    distinct_user_ids = [x.userId for x in ratings_val_test.select('userId').distinct().collect()]
+
+    ratings_validation = ratings_val_test.filter(ratings.userId.isin(sample(distinct_user_ids, len(distinct_user_ids)//2)))
+    ratings_test = ratings_val_test.subtract(ratings_validation)
 
     return ratings_train, ratings_test, ratings_validation
 

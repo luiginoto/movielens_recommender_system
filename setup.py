@@ -24,6 +24,6 @@ setup(
     author_email='ga947@nyu.edu',
     url='https://github.com/nyu-big-data/final-project-group-26',
     license=license,
-    packages=find_packages(exclude=('tests', 'scratch', 'data', 'dist', 'Group26_MovieLens.egg-info' ))
+    packages=find_packages(exclude=('tests', 'scratch', 'data', 'dist', 'Group26_MovieLens.egg-info', 'build'))
 )
 
