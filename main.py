@@ -4,7 +4,7 @@ import getpass
 
 # And pyspark.sql to get the spark session
 from pyspark.sql import SparkSession
-import napoli
+import dataset_split
 import popularity
 from sklearn.utils import parallel_backend
 from sklearn.model_selection import cross_val_score
@@ -29,7 +29,7 @@ def main(spark, in_path, out_path):
 
 	# TODO will have to change implementation of napoliSplit if we want a terminal written for in_path argument --> edit readRDD.py helper function
     print('Splitting the ratings dataset into training, validation and test set')
-    ratings_train, ratings_test, ratings_validation = napoli.napoliSplit(spark, in_path, small=True, column_name = 'ratings', prop = 0.8)
+    ratings_train, ratings_test, ratings_validation = dataset_split.ratingsSplit(spark, in_path, small=True, column_name = 'ratings', prop = 0.8)
     ratings_train.show()
 
 
@@ -62,7 +62,7 @@ def main(spark, in_path, out_path):
     best_score = 0
     best_model = None
     for damping in damping_values:
-        baseline = PopularityBaseline(damping = damping)
+        baseline = popularity.PopularityBaseline(damping = damping)
         baseline.fit(X_train)
         baseline_metrics_val = baseline.evaluate(baseline.results, X_val)
         val_score = baseline_metrics_val.meanAveragePrecision
