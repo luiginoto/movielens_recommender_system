@@ -4,13 +4,12 @@ import getpass
 
 # And pyspark.sql to get the spark session
 from pyspark.sql import SparkSession
-import napoli
-from sklearn.utils import parallel_backend
-from sklearn.model_selection import cross_val_score
-from pyspark.ml.evaluation import RegressionEvaluator
+import data_split
+from pyspark.ml.evaluation import RankingEvaluator
 from pyspark.ml.recommendation import ALS 
-from pyspark.ml.tuning import CrossValidator, ParamGridBuilder
-from pyspark.sql.functions import isnan
+from pyspark.ml.feature import VectorAssembler
+from pyspark.ml.functions import vector_to_array
+from pyspark.sql import functions as F
 
 #import ALS_custom
 
@@ -26,9 +25,7 @@ def main(spark, in_path, out_path):
     print('')
 
 	# TODO will have to change implementation of napoliSplit if we want a terminal written for in_path argument --> edit readRDD.py helper function
-    ratings_train, ratings_test, ratings_validation = napoli.napoliSplit(spark, in_path, small=True, column_name = 'ratings', prop = 0.8)
-    ratings_train.show()
-
+    ratings_train, ratings_test, ratings_validation = data_split.train_test_val(spark, in_path, small=True, column_name = 'ratings', prop = 0.8)
 
     # split into training and testing sets
     #ratings_train.write.csv(f'{out_path}/ratings_train.csv')
@@ -53,42 +50,35 @@ def main(spark, in_path, out_path):
     print("Distinct users in Test set : ", X_test[["userId"]].distinct().count())
     print("Distinct users in Validation set: ", X_val[["userId"]].distinct().count())
 
-    als = ALS(userCol="userId",itemCol="movieId",ratingCol="rating",rank=5, maxIter=10, seed=0)
+    # See users and/or items in the validation dataset that were not part of the training dataset and transform() method implementation of ALS returns NaN for their predictions
+    # Note we set cold start strategy to 'drop' to ensure we don't get NaN evaluation metrics, else join may ltaer take care of this 
+    als = ALS(userCol="userId",itemCol="movieId",ratingCol="rating",rank=5, maxIter=10, seed=0, coldStartStrategy="drop")
     model = als.fit(X_train)
 
-    # displaying the latent features for 10 users
-    model.userFactors.show(10, truncate = False) 
+    # Get predicted ratings on all existing user-movie pairs
+    predictions = model.transform(ratings_validation).drop('timestamp')
+    predictions.show()
 
-    # See users and/or items in the validation dataset that were not part of the training dataset and transform() method implementation of ALS returns NaN for their predictions
-    model.transform(X_val).where(isnan('prediction')).show(5)
-    model.transform(X_val[['userId','movieId']]).na.drop()[['prediction']].show()
+    # Get predicted ratings on all existing user-movie pairs
+    # https://spark.apache.org/docs/latest/api/python/reference/api/pyspark.ml.evaluation.RankingEvaluator.html#pyspark.ml.evaluation.RankingEvaluator
 
-    # establish evaluation metric
-    eval=RegressionEvaluator(metricName="rmse",labelCol="rating", predictionCol="prediction")
+    # Note the evaluator ingests pyspark dataframe NOT rdd
+    df_label = predictions.groupBy('movieId').agg(F.collect_list('rating').alias('label_bad_float'))
+    df_pred = predictions.groupBy('movieId').agg(F.collect_list('prediction').alias('prediction_bad_float'))
+    raw = df_label.join(df_pred, ['movieId'])
 
-    # check baseline ALS model performancee
-    train_predictions = model.transform(X_train)
-    test_predictions = model.transform(X_test).na.drop()
-    print("Base RMSE on training data : ", eval.evaluate(train_predictions))
-    print("Base RMSE on test data: ", eval.evaluate(test_predictions))
+     # Note the evaluator ingests pyspark dataframe NOT rdd
+    #df = VectorAssembler(inputCols=['label_bad_float'], outputCol='label').transform(raw)
+    #df = VectorAssembler(inputCols=['userId','movieId'], outputCol='label').transform(df)
+    #df = df.select(vector_to_array('label').alias('label'))
+
+    evaluator = RankingEvaluator.s
+
+    # is this the right metric -- see documentation and requirements
+    evaluator.evaluate(raw, {evaluator.metricName: "precisionAtK", evaluator.k: 100})
 
 
-
-    # Build the recommendation model using ALS on the training data. Note we set cold start strategy to 'drop' to ensure we don't get NaN evaluation metrics
-    #als_model = ALS_custom.alsDF(ratings_train, ratings_test, maxIter=5, userCol="userId", itemCol="movieId", ratingCol="rating")
-
-    # Fit the ALS model to the training set
-
-    # Tune params against validation data; evaluate the model by computing the RMSE (?) on the test data
-
-    #  initialize the ALS model
-
-    # create the parameter grid              
-
-    # instantiating crossvalidator estimator
-
-    # now incorporate names of movies to people, essentialy: user xyz would like movieId 123 "abc", in genre tag "a|b|c" in a data structure
-    
+ 
 
 
    
@@ -103,6 +93,7 @@ if __name__ == "__main__":
         .config('dynamicAllocation.enabled', 'true')\
         .getOrCreate()
 
+        
     # Get user netID from the command line
     netID = getpass.getuser()
 
