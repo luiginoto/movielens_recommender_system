@@ -1,5 +1,5 @@
 
-# -*- coding: utf-8 -*- 
+# -*- coding: utf-8 -*-
 import warnings
 from pyspark.sql.window import Window
 from pyspark.sql import functions as fn
@@ -7,7 +7,7 @@ from random import sample
 
 
 def readRDD(spark, dirstring, small, column_name):
-    #TODO instead of manually writing this in, column_names should be read in from spark methods? A lot of repetition here 
+    #TODO instead of manually writing this in, column_names should be read in from spark methods? A lot of repetition here
     if small == True:
         print('Using small set...')
         print('')
@@ -51,7 +51,7 @@ def readRDD(spark, dirstring, small, column_name):
 
 def ratings_split(rdd, prop):
     windowSpec  = Window.partitionBy('userId').orderBy('timestamp')
-    
+
     ratings = rdd \
             .withColumn('row_number', fn.row_number().over(windowSpec)) \
             .withColumn('n_ratings', fn.count('rating').over(windowSpec)) \
@@ -67,4 +67,3 @@ def ratings_split(rdd, prop):
     ratings_test = ratings_val_test.subtract(ratings_validation)
 
     return ratings_train, ratings_test, ratings_validation
-
