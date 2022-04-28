@@ -3,7 +3,6 @@
 # https://www.timlrx.com/blog/creating-a-custom-cross-validation-function-in-pyspark
 
 import pyspark.sql.functions as fn
-from pyspark.ml.tuning import ParamGridBuilder
 from pyspark.ml.recommendation import ALS 
 from pyspark.sql import functions as fn
 from pyspark.ml.evaluation import RankingEvaluator
@@ -11,15 +10,18 @@ from pyspark.ml.evaluation import RankingEvaluator
 
 class CustomCrossValidatorALS():
     
-    def __init__(self, seed=0):
+    def __init__(self, ratings, test_ratings, seed=0):
         
         self.fitted = False
+        self.ratings = ratings
+        self.test_ratings = test_ratings
         self.seed = seed
         self.predictions = None
         self.predsAndlabels = None
         
-    def cv_fitted(self, ratings, test_ratings, top_k = 10, rank = [10], regParam = [0.1], maxIter=[10], coldStartStrategy="nan"):
+    def cv_fitted(self, top_k = 100, rank = [10], regParam = [0.1], maxIter=[10], coldStartStrategy="nan"):
         self.rank = rank
+        self.k = top_k
         self.regParam = regParam
         self.maxIter = maxIter
         self.coldStartStrategy = coldStartStrategy
@@ -28,6 +30,9 @@ class CustomCrossValidatorALS():
         self.best_predsAndlabels = None
         self.best_score = 0
         self.best_model = None
+        self.best_rank = None
+        self.best_maxIter = None
+        self.best_regParam = None
 
         als = ALS(userCol="userId",itemCol="movieId",ratingCol="rating", seed = self.seed)
 
@@ -38,19 +43,22 @@ class CustomCrossValidatorALS():
                     als.setRank(r)
                     als.setRegParam(reg)
 
-                    self.model = als.fit(ratings)
+                    self.model = als.fit(self.ratings)
                     self.fitted = True
 
-                    self.predictions = self.model.transform(test_ratings).drop('timestamp')
+                    self.predictions = self.model.transform(self.test_ratings).drop('timestamp')
                     self.score, self.predsAndlabels = self.evaluate(self.predictions, top_k)
 
                     if self.score > self.best_score:
                         self.best_model = self.model
                         self.best_score = self.score
                         self.best_predsAndlabels = self.predsAndlabels
+                        self.best_rank = r
+                        self.best_maxIter = i
+                        self.best_regParam = reg
 
-        print('Best ALS model given parameters: ', self.best_model)
-        print("Best ALS model score given parameters: ", self.best_score)
+        print("Best ALS model given parameters using MAP@{k}: Rank {r} | MaxIter: {i} | RegParam: {reg} | ColdStartStrategy: {strat} |".format(k=self.k , r=r, i=i, reg=reg, strat=self.coldStartStrategy))
+        print("Best ALS model score given these parameters: ", self.best_score)
 
         self.score = 0
         self.predsAndlabels = None
@@ -68,4 +76,3 @@ class CustomCrossValidatorALS():
         evaluator = RankingEvaluator().setPredictionCol('recommendations')
 
         return evaluator.evaluate(self.predsAndlabels), self.predsAndlabels
-   

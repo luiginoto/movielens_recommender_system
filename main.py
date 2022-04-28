@@ -82,15 +82,17 @@ def main(spark, in_path, out_path):
     print("Mean Average Precision on test set: ", baseline_metrics_test.meanAveragePrecision)
     
     '''
+    # make the above work within 5 lines
 
 
+
+    '''
     print("Fitting Latent Factor model with ALS")
     als = ALS(userCol="userId",itemCol="movieId",ratingCol="rating",rank=10, regParam=0.1, maxIter=10, coldStartStrategy="nan", seed=0)
     model = als.fit(X_train)
 
     # displaying the latent features for 10 users
     #model.userFactors.show(10, truncate = False)
-
     # Get predicted ratings on all existing user-movie pairs
     predictions = model.transform(ratings_validation).drop('timestamp')
     predictions.show()
@@ -111,15 +113,17 @@ def main(spark, in_path, out_path):
     evaluator = RankingEvaluator()
     evaluator.setPredictionCol("recommendations")
     print(evaluator.evaluate(predsAndlabels))
+    '''
 
-    sex = CustomCrossValidatorALS(seed=0).cv_fitted(ratings=X_train, test_ratings=X_val, rank=[10], regParam=[0.1])
+    # this does the above in a line + cross val
+    sex = CustomCrossValidatorALS(ratings=X_train, test_ratings=X_val, seed=0).cv_fitted(rank=[10, 20], regParam=[0.1, 0.5])
 
 
 # Only enter this block if we're in main
 if __name__ == "__main__":
 
     spark = SparkSession.builder.appName('project')\
-        .config('spark.submit.pyFiles', 'Group26_MovieLens-0.1.0-py3-none-any.zip')\
+        .config('spark.submit.pyFiles', 'Group26_MovieLens-0.4.0-py3-none-any.zip')\
         .config('spark.shuffle.useOldFetchProtocol', 'true')\
         .config('spark.shuffle.service.enabled','true')\
         .config('dynamicAllocation.enabled', 'true')\
