@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 #Use getpass to obtain user netID
 import getpass
-from dataset_split.helpers import readRDD
+from validated_models.ALS import CustomCrossValidatorALS
+from dataset_split.utils import readRDD
+from validated_models.popularity import PopularityBaseline
 
 # And pyspark.sql to get the spark session
 from pyspark.sql import SparkSession
-import popularity
 import dataset_split
-from pyspark.mllib.evaluation import RankingMetrics
 from pyspark.ml.recommendation import ALS 
 from pyspark.sql import functions as fn
 from pyspark.ml.evaluation import RankingEvaluator
+from pyspark.mllib.evaluation import RankingMetrics
 
 
 #import ALS_custom
@@ -45,6 +46,7 @@ def main(spark, in_path, out_path):
 
 
     X_train, X_test, X_val = ratings_train.drop('timestamp'), ratings_test.drop('timestamp'), ratings_validation.drop('timestamp')
+    X_test.show()
     '''
     ratings_per_user = ratings_train.groupby('userId').agg({"rating":"count"})
     ratings_per_user.describe().show()
@@ -81,9 +83,9 @@ def main(spark, in_path, out_path):
     
     '''
 
-    '''
+
     print("Fitting Latent Factor model with ALS")
-    als = ALS(userCol="userId",itemCol="movieId",ratingCol="rating",rank=10, regParam=0.01, maxIter=10, coldStartStrategy="nan", seed=0)
+    als = ALS(userCol="userId",itemCol="movieId",ratingCol="rating",rank=10, regParam=0.1, maxIter=10, coldStartStrategy="nan", seed=0)
     model = als.fit(X_train)
 
     # displaying the latent features for 10 users
@@ -109,14 +111,8 @@ def main(spark, in_path, out_path):
     evaluator = RankingEvaluator()
     evaluator.setPredictionCol("recommendations")
     print(evaluator.evaluate(predsAndlabels))
-    '''
 
-    X_train.withColumn('cv', 'train').show()
-    X_val.withColumn('cv', 'test')
-
-
-
-
+    sex = CustomCrossValidatorALS(seed=0).cv_fitted(ratings=X_train, test_ratings=X_val, rank=[10], regParam=[0.1])
 
 
 # Only enter this block if we're in main
