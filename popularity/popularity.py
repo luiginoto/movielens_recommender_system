@@ -40,11 +40,9 @@ class PopularityBaseline():
         UserMovies = UserMovies.join(results, 'id').select('top_movies', 'liked_movies')
 
         predictionAndLabels = UserMovies.rdd.map(tuple)
-        
-        if self.damping == 5:
-            UserMovies.show()
 
         metrics = RankingMetrics(predictionAndLabels)
+        
         return metrics
 
 #evaluation done by using Spark RankingMetrics which takes as in put an rdd where each user is a row and for each user have list of recommended movies
