@@ -29,10 +29,10 @@ def main(spark, in_path, out_path):
 
 	# TODO will have to change implementation of napoliSplit if we want a terminal written for in_path argument --> edit readRDD.py helper function
     print('Splitting the ratings dataset into training, validation and test set')
-    ratings_train, ratings_test, ratings_validation = dataset_split.ratingsSplit(spark, in_path, small=True, column_name = 'ratings', prop = 0.8)
+    ratings_train, ratings_test, ratings_validation = dataset_split.ratingsSplit(spark, in_path, small=True, column_name = 'ratings', train_ratio = 0.8, user_ratio=0.5)
     ratings_train.show()
 
-    movie_title_df, _ = readRDD(spark, in_path, small=True, column_name = 'movies')
+    #movie_title_df, _ = readRDD(spark, in_path, small=True, column_name = 'movies')
 
 
     # split into training and testing sets
@@ -44,13 +44,15 @@ def main(spark, in_path, out_path):
     print("Distinct users: ", ratings_train.select("userId").distinct().count())
     print("Total number of ratings: ", ratings_train.count())
 
+
+    X_train, X_test, X_val = ratings_train.drop('timestamp'), ratings_test.drop('timestamp'), ratings_validation.drop('timestamp')
+    '''
     ratings_per_user = ratings_train.groupby('userId').agg({"rating":"count"})
     ratings_per_user.describe().show()
 
     ratings_per_movie = ratings_train.groupby('movieId').agg({"rating":"count"})
     ratings_per_movie.describe().show()
 
-    X_train, X_test, X_val = ratings_train.drop('timestamp'), ratings_test.drop('timestamp'), ratings_validation.drop('timestamp')
     print("Training data size : ", X_train.count())
     print("Validation data size : ", X_val.count())
     print("Test data size : ", X_test.count())
@@ -72,12 +74,15 @@ def main(spark, in_path, out_path):
             best_score = val_score
             best_baseline_model = baseline
     print('Best Popularity baseline model: ', best_baseline_model)
-
     print("Evaluating best Popularity baseline model")
     baseline_metrics_train = baseline.evaluate(best_baseline_model.results, X_train)
     baseline_metrics_test = baseline.evaluate(best_baseline_model.results, X_test)
     print("Mean Average Precision on training set: ", baseline_metrics_train.meanAveragePrecision)
     print("Mean Average Precision on test set: ", baseline_metrics_test.meanAveragePrecision)
+    
+    '''
+
+
 
     print("Fitting Latent Factor model with ALS")
     als = ALS(userCol="userId",itemCol="movieId",ratingCol="rating",rank=5, maxIter=10, coldStartStrategy="nan", seed=0)
@@ -95,13 +100,18 @@ def main(spark, in_path, out_path):
 
     # Note the evaluator ingests pyspark dataframe NOT rdd
     df_label = predictions.groupBy('userId').agg(fn.collect_list('movieId').alias('label'))
-    df_pred = predictions.groupBy('userId').agg(fn.collect_list('prediction').alias('prediction'))
-    data = df_label.join(df_pred, ['userId'])
-    data.rdd.map(tuple)
-    #data.show()
-    sc = SparkContext().getOrCreate()
-    metrics = RankingMetrics(data)
-    print("ALS MAP@100 on validation set: ", metrics.meanAveragePrecisionAt(100))
+
+    df_recs = model.recommendForAllUsers(10).withColumn('recommendations', fn.explode((fn.col('recommendations'))))
+    df_recs = df_recs.withColumn('recommendations', df_recs.recommendations.getItem('movieId'))\
+                    .groupBy('userId').agg(fn.collect_list('recommendations').alias('recommendations'))
+
+    predsAndlabels = df_label.join(df_recs, 'userId').select('recommendations', 'label')
+
+    predsAndlabels.show()
+
+
+    metrics = RankingMetrics(predsAndlabels.rdd.map(tuple))
+    print("ALS MAP@100 on validation set: ", metrics.meanAveragePrecision)
 
     #num_recs = 10
     #user_id = 100

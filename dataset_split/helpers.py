@@ -49,7 +49,7 @@ def readRDD(spark, dirstring, small, column_name):
             warnings.warn('Warning Message: Column name not found; opting for ratings')
             return spark.read.csv(dir + 'ratings.csv', header=True, schema='userId INT, movieId INT, rating FLOAT, timestamp INT'), 'ratings'
 
-def ratings_split(rdd, prop):
+def ratings_split(rdd, train_ratio=0.6, user_ratio=0.5):
     windowSpec  = Window.partitionBy('userId').orderBy('timestamp')
 
     ratings = rdd \
@@ -58,12 +58,15 @@ def ratings_split(rdd, prop):
             .withColumn('prop_idx', (fn.col('row_number') / fn.col('n_ratings')))
     ratings.show(20)
 
-    ratings_train = ratings.filter(ratings.prop_idx <= prop).drop('row_number', 'n_ratings', 'prop_idx')
+    ratings_train = ratings.filter(ratings.prop_idx <= train_ratio).drop('row_number', 'n_ratings', 'prop_idx')
 
-    ratings_val_test = ratings.filter(ratings.prop_idx > prop).drop('row_number', 'n_ratings', 'prop_idx')
-    distinct_user_ids = [x.userId for x in ratings_val_test.select('userId').distinct().collect()]
+    ratings_val_test = ratings.filter(ratings.prop_idx > train_ratio).drop('row_number', 'n_ratings', 'prop_idx')
+    distinct_user_ids = ratings_val_test.select('userId').distinct().alias('userId')
+    user_ids_sample = distinct_user_ids.sample(withReplacement=False, fraction=user_ratio).withColumn('filter_val', fn.lit(1))
 
-    ratings_validation = ratings_val_test.filter(ratings.userId.isin(sample(distinct_user_ids, len(distinct_user_ids)//2)))
-    ratings_test = ratings_val_test.subtract(ratings_validation)
+    ratings_val_test = ratings_val_test.join(user_ids_sample, on='userId', how='left')
+
+    ratings_validation = ratings_val_test.filter(ratings_val_test.filter_val == 1).drop('filter_val')
+    ratings_test = ratings_val_test.filter(ratings_val_test.filter_val.isNull()).drop('filter_val')
 
     return ratings_train, ratings_test, ratings_validation

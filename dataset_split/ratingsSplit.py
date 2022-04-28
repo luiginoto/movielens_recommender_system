@@ -2,7 +2,7 @@
 import sys
 from . import helpers
 
-def ratingsSplit(spark, dirstring, small, column_name, prop = 0.8):
+def ratingsSplit(spark, dirstring, small, column_name, train_ratio = 0.6, user_ratio=0.5):
     # TODO you can do error checking for prop limits here if needed, i.e if lower greater than upper, is valid, etc
     rdd, verified_column_name = helpers.readRDD(spark, dirstring, small, column_name)
 
@@ -12,7 +12,7 @@ def ratingsSplit(spark, dirstring, small, column_name, prop = 0.8):
 
    # TODO implement for others?
     if verified_column_name == 'ratings':
-            return helpers.ratings_split(rdd, prop)
+            return helpers.ratings_split(rdd, train_ratio, user_ratio)
     else:
         print('Something wrong??')
         sys.exit('WTF is this')
