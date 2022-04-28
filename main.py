@@ -30,7 +30,7 @@ def main(spark, in_path, out_path):
     # TODO will have to change implementation of napoliSplit if we want a terminal written for in_path argument --> edit readRDD.py helper function
     print('Splitting the ratings dataset into training, validation and test set')
     ratings_train, ratings_test, ratings_validation = dataset_split.ratingsSplit(
-        spark, in_path, small=True, column_name='ratings', train_ratio=0.8, user_ratio=0.5)
+        spark, in_path, small=False, column_name='ratings', train_ratio=0.8, user_ratio=0.5)
     ratings_train.show()
 
     #movie_title_df, _ = readRDD(spark, in_path, small=True, column_name = 'movies')
@@ -85,38 +85,9 @@ def main(spark, in_path, out_path):
     '''
     # make the above work within 5 lines
 
-    '''
-    print("Fitting Latent Factor model with ALS")
-    als = ALS(userCol="userId",itemCol="movieId",ratingCol="rating",rank=10, regParam=0.1, maxIter=10, coldStartStrategy="nan", seed=0)
-    model = als.fit(X_train)
-
-    # displaying the latent features for 10 users
-    #model.userFactors.show(10, truncate = False)
-    # Get predicted ratings on all existing user-movie pairs
-    predictions = model.transform(ratings_validation).drop('timestamp')
-    predictions.show()
-
-    # Get predicted ratings on all existing user-movie pairs
-    # https://spark.apache.org/docs/latest/api/python/reference/api/pyspark.ml.evaluation.RankingEvaluator.html#pyspark.ml.evaluation.RankingEvaluator
-
-    df_label = predictions.groupBy('userId').agg(fn.collect_list('movieId').alias('label'))
-
-    df_recs = model.recommendForAllUsers(10).withColumn('recommendations', fn.explode((fn.col('recommendations'))))
-    df_recs = df_recs.withColumn('recommendations', df_recs.recommendations.getItem('movieId'))\
-                    .groupBy('userId').agg(fn.collect_list('recommendations').alias('recommendations'))
-
-    predsAndlabels = df_label.join(df_recs, 'userId').select(fn.col('recommendations').cast('array<double>').alias('recommendations'), fn.col('label').cast('array<double>').alias('label'))
-
-    predsAndlabels.show()
-
-    evaluator = RankingEvaluator()
-    evaluator.setPredictionCol("recommendations")
-    print(evaluator.evaluate(predsAndlabels))
-    '''
-
     # this does the above in a line + cross val
     sex = CustomCrossValidatorALS(ratings=X_train, test_ratings=X_val, seed=0).cv_fitted(
-        rank=[10, 20], regParam=[0.1, 0.5])
+        rank=[10, 20, 30], regParam=[0.01, 0.1, 0.5, 1, 10], maxIter=[10, 15])
 
 
 # Only enter this block if we're in main

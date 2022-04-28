@@ -19,7 +19,7 @@ class CustomCrossValidatorALS():
         self.predictions = None
         self.predsAndlabels = None
 
-    def cv_fitted(self, top_k=100, rank=[10], regParam=[0.1], maxIter=[10], coldStartStrategy="nan"):
+    def cv_fitted(self, top_k=100, rank=[10], regParam=[0.1], maxIter=[10], coldStartStrategy="nan", verbose=True):
         self.rank = rank
         self.k = top_k
         self.regParam = regParam
@@ -33,6 +33,7 @@ class CustomCrossValidatorALS():
         self.best_rank = None
         self.best_maxIter = None
         self.best_regParam = None
+        self.verbose = verbose
 
         als = ALS(userCol="userId", itemCol="movieId",
                   ratingCol="rating", seed=self.seed)
@@ -44,6 +45,10 @@ class CustomCrossValidatorALS():
                     als.setRank(r)
                     als.setRegParam(reg)
 
+                    if self.verbose:
+                        print("Fitting ALS model given parameters: Rank {r} | MaxIter: {i} | RegParam: {reg} | ColdStartStrategy: {strat} |".format(
+                           r=r, i=i, reg=reg, strat=self.coldStartStrategy))
+
                     self.model = als.fit(self.ratings)
                     self.fitted = True
 
@@ -51,6 +56,10 @@ class CustomCrossValidatorALS():
                         self.test_ratings).drop('timestamp')
                     self.score, self.predsAndlabels = self.evaluate(
                         self.predictions, top_k)
+
+                    if self.verbose:
+                        print('Score for ALS model given these parameters using MAP@{k}: {s}'.format(k = self.k, s = self.score))
+                        print('------------------------------------------------------------------------------------------------------------------------------')     
 
                     if self.score > self.best_score:
                         self.best_model = self.model
@@ -60,8 +69,9 @@ class CustomCrossValidatorALS():
                         self.best_maxIter = i
                         self.best_regParam = reg
 
+        print('==============================================================================================================================')
         print("Best ALS model given parameters using MAP@{k}: Rank {r} | MaxIter: {i} | RegParam: {reg} | ColdStartStrategy: {strat} |".format(
-            k=self.k, r=r, i=i, reg=reg, strat=self.coldStartStrategy))
+            k=self.k, r= self.best_rank, i=self.best_maxIter, reg=self.best_regParam, strat=self.coldStartStrategy))
         print("Best ALS model score given these parameters: ", self.best_score)
 
         self.score = 0
