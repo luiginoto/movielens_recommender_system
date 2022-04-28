@@ -9,7 +9,7 @@ alias hjs="$HADOOP_EXE jar $HADOOP_LIBPATH/$HADOOP_STREAMING"
 
 # Creating the spark session object: --py-files directive sends the zip file to the Spark workers but does not add it to the PYTHONPATH; to add the dependencies to the PYTHONPATH to fix the ImportError add to main.py .config settings
 alias spark-submit='PYSPARK_PYTHON=$(which python) spark-submit \
- --py-files dist/Group26_MovieLens-0.4.0-py3-none-any.zip \
+ --py-files dist/Group26_MovieLens-0.4.2-py3-none-any.zip \
  main.py'
 
 module purge

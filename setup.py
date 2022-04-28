@@ -17,7 +17,7 @@ with open('LICENSE') as f:
 
 setup(
     name='Group26_MovieLens',
-    version='0.4.0',
+    version='0.4.2',
     description='Package for first iteration of final project',
     long_description=readme,
     author='group26',
