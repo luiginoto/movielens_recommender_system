@@ -81,8 +81,7 @@ def main(spark, in_path, out_path):
     
     '''
 
-
-
+    '''
     print("Fitting Latent Factor model with ALS")
     als = ALS(userCol="userId",itemCol="movieId",ratingCol="rating",rank=10, regParam=0.01, maxIter=10, coldStartStrategy="nan", seed=0)
     model = als.fit(X_train)
@@ -110,29 +109,11 @@ def main(spark, in_path, out_path):
     evaluator = RankingEvaluator()
     evaluator.setPredictionCol("recommendations")
     print(evaluator.evaluate(predsAndlabels))
+    '''
 
+    X_train.withColumn('cv', 'train').show()
+    X_val.withColumn('cv', 'test')
 
-    #metrics = RankingMetrics(predsAndlabels.rdd.map(tuple))
-    #print("ALS MAP@100 on validation set: ", metrics.meanAveragePrecisionAt(10))
-
-    #num_recs = 10
-    #user_id = 100
-    #recommendations = model.recommendForAllUsers(num_recs)
-
-    #def name_retriever(movie_id, movie_title_df):
-    #    return movie_title_df.where(movie_title_df.movieId == movie_id).take(1)[0]['title']
-    
-    # get recommendations specifically for the new user that has been added to the DataFrame
-    #recs_for_user = recommendations.where(recommendations.userId == user_id).take(1)
-    
-    #for ranking, (movie_id, rating) in enumerate(recs_for_user[0]['recommendations']):
-    #    movie_string = name_retriever(movie_id, movie_title_df)
-    #    print('Recommendation {}: {}  | predicted score :{}'.format(ranking+1,movie_string,rating))
-        
-    
-
-
-    # now incorporate names of movies to people, essentialy: user xyz would like movieId 123 "abc", in genre tag "a|b|c" in a data structure
 
 
 
