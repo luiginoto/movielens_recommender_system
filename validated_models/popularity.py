@@ -50,5 +50,6 @@ class PopularityBaseline():
 
         return metrics
 
+
 # evaluation done by using Spark RankingMetrics which takes as in put an rdd where each user is a row and for each user have list of recommended movies
 # and list of ground truth movies. So for each user get the ground truth as those movies watched with rating > 2.5

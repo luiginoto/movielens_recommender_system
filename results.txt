@@ -1,6 +1,6 @@
 SMALL DATASET
 ================================
-CustomCrossValidatorALS(ratings=X_train, test_ratings=X_val, seed=0).cv_fitted(rank=[10, 20, 30], regParam=[0.01, 0.1, 0.5, 1], maxIter=[10, 15])
+ValidatedALS(ratings=X_train, test_ratings=X_val, seed=0).validate(rank=[10, 20, 30], regParam=[0.01, 0.1, 0.5, 1], maxIter=[10, 15])
 
 Fitting ALS model given parameters: Rank 10 | MaxIter: 10 | RegParam: 0.01 | ColdStartStrategy: nan |
 Score for ALS model given these parameters using MAP@100: 0.023130893920591564
@@ -94,15 +94,38 @@ Score for ALS model given these parameters using MAP@100: 0.008240980222231789
 ------------------------------------------------------------------------------------------------------------------------------
 ==============================================================================================================================
 Best ALS model given parameters using MAP@100: Rank 30 | MaxIter: 10 | RegParam: 0.01 | ColdStartStrategy: nan |
-Best ALS model score given these parameters:  0.06620919295431764
+Best ALS model MAP@100 score given these parameters on test set:  0.05876369667001602
+Best ALS model NCDG@100 score given these parameters on test set:  0.22506030537559826
 
-
+Popularity
+Tuning hyperparameters based on Mean Average Precision
+Fitting popularity baseline given parameters: Damping 0
+Score for popularity baseline given these parameters using MAP@100:  0.00879240048486507
+------------------------------------------------------------------------------------------------------------------------------
+Fitting popularity baseline given parameters: Damping 5
+Score for popularity baseline given these parameters using MAP@100:  0.049065488727106796
+------------------------------------------------------------------------------------------------------------------------------
+Fitting popularity baseline given parameters: Damping 10
+Score for popularity baseline given these parameters using MAP@100:  0.04850010091390639
+------------------------------------------------------------------------------------------------------------------------------
+Fitting popularity baseline given parameters: Damping 15
+Score for popularity baseline given these parameters using MAP@100:  0.04790638252508725
+------------------------------------------------------------------------------------------------------------------------------
+Fitting popularity baseline given parameters: Damping 20
+Score for popularity baseline given these parameters using MAP@100:  0.04778576364842465
+------------------------------------------------------------------------------------------------------------------------------
+Best Popularity baseline model:  PopularityBaseline(threshold = None, damping = 5, fitted = True)
+Evaluating best Popularity baseline model
+MAP@100 on training set:  0.2176074962223092
+MAP@100 on test set:  0.0561632772002529
+NCDG@100 on training set:  0.4047964367634515
+NCDG@100 on test set:  0.24490175385336133
 
 
 
 LARGE DATASET
 ================================
-CustomCrossValidatorALS(ratings=X_train, test_ratings=X_val, seed=0).cv_fitted(rank=[10, 20, 30], regParam=[0.01, 0.1, 0.5, 1], maxIter=[10, 15])
+ValidatedALS(ratings=X_train, test_ratings=X_val, seed=0).validate(rank=[10, 20, 30], regParam=[0.01, 0.1, 0.5, 1], maxIter=[10, 15])
 
 Fitting ALS model given parameters: Rank 10 | MaxIter: 10 | RegParam: 0.01 | ColdStartStrategy: nan |
 Score for ALS model given these parameters using MAP@100: 0.00028996535051047215
@@ -197,3 +220,27 @@ Score for ALS model given these parameters using MAP@100: 0.0013775583619520906
 ==============================================================================================================================
 Best ALS model given parameters using MAP@100: Rank 20 | MaxIter: 15 | RegParam: 0.1 | ColdStartStrategy: nan |
 Best ALS model score given these parameters:  0.003470744119227772
+
+
+Popularity
+Fitting popularity baseline given parameters: Damping 0
+Score for popularity baseline given these parameters using MAP@100:  1.2609258491094385e-05
+------------------------------------------------------------------------------------------------------------------------------
+Fitting popularity baseline given parameters: Damping 5
+Score for popularity baseline given these parameters using MAP@100:  0.03753569011813698
+------------------------------------------------------------------------------------------------------------------------------
+Fitting popularity baseline given parameters: Damping 10
+Score for popularity baseline given these parameters using MAP@100:  0.0434751199114831
+------------------------------------------------------------------------------------------------------------------------------
+Fitting popularity baseline given parameters: Damping 15
+Score for popularity baseline given these parameters using MAP@100:  0.047554468945299
+------------------------------------------------------------------------------------------------------------------------------
+Fitting popularity baseline given parameters: Damping 20
+Score for popularity baseline given these parameters using MAP@100:  0.04989908375569678
+------------------------------------------------------------------------------------------------------------------------------
+Best Popularity baseline model:  PopularityBaseline(threshold = None, damping = 20, fitted = True)
+Evaluating best Popularity baseline model
+MAP@100 on training set:  0.038352835367568415
+MAP@100 on test set:  0.050010853099176335
+NCDG@100 on training set:  0.14706183562421465
+NCDG@100 on test set:  0.19054227254556158
