@@ -4,6 +4,7 @@ import getpass
 from validated_models.ALS import ValidatedALS
 from dataset_split.utils import readRDD
 from validated_models.popularity import PopularityBaseline
+from validated_models.popularity_validation import PopularityBaselineValidation
 from pyspark.ml.recommendation import ALS
 
 
@@ -61,26 +62,27 @@ def main(spark, in_path, out_path):
     print("Fitting Popularity baseline model")
     print("Tuning hyperparameters based on Mean Average Precision")
     damping_values = [0, 5, 10, 15, 20]
-    best_score = 0
-    best_baseline_model = None
-    for damping in damping_values:
-        baseline = PopularityBaseline(damping = damping)
-        baseline.fit(X_train)
-        baseline_metrics_val = baseline.evaluate(baseline.results, X_val)
-        val_score = baseline_metrics_val.meanAveragePrecision
+    # best_score = 0
+    # best_baseline_model = None
+    # for damping in damping_values:
+    #     baseline = PopularityBaseline(damping = damping)
+    #     baseline.fit(X_train)
+    #     baseline_metrics_val = baseline.evaluate(baseline.results, X_val)
+    #     val_score = baseline_metrics_val.meanAveragePrecision
 
-        print("Fitting popularity baseline given parameters: Damping {d}".format(d=damping))
-        print('Score for popularity baseline given these parameters using MAP@100: ', val_score)
-        print('------------------------------------------------------------------------------------------------------------------------------')     
+    #     print("Fitting popularity baseline given parameters: Damping {d}".format(d=damping))
+    #     print('Score for popularity baseline given these parameters using MAP@100: ', val_score)
+    #     print('------------------------------------------------------------------------------------------------------------------------------')     
 
-        if val_score > best_score:
-            best_score = val_score
-            best_baseline_model = baseline
+    #     if val_score > best_score:
+    #         best_score = val_score
+    #         best_baseline_model = baseline
 
-    print('Best Popularity baseline model: 's, best_baseline_model)
+    # print('Best Popularity baseline model: ', best_baseline_model)
+    best_baseline_model = PopularityBaselineValidation(X_train, X_val, damping_values)
     print("Evaluating best Popularity baseline model")
-    baseline_metrics_train = baseline.evaluate(best_baseline_model.results, X_train)
-    baseline_metrics_test = baseline.evaluate(best_baseline_model.results, X_test)
+    baseline_metrics_train = best_baseline_model.evaluate(best_baseline_model.results, X_train)
+    baseline_metrics_test = best_baseline_model.evaluate(best_baseline_model.results, X_test)
     print("MAP@100 on training set: ", baseline_metrics_train.meanAveragePrecision)
     print("MAP@100 on test set: ", baseline_metrics_test.meanAveragePrecision)
     print("NCDG@100 on training set: ", baseline_metrics_train.ndcgAt(100))
