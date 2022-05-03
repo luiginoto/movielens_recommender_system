@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from popularity import PopularityBaseline
 
-def PopularityBaselineValidation(X_train, X_val, damping_vals, threshold_vals = None, metric_val= 'meanAveragePrecision',\
+def PopularityBaselineValidation(X_train, X_val, damping_vals, threshold_vals = [None], metric_val= 'meanAveragePrecision',\
                                  k_val = 100, verbose = True):
     best_score = 0
     best_baseline_model = None
