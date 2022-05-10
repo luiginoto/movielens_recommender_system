@@ -7,7 +7,6 @@ from validated_models.popularity import PopularityBaseline
 from validated_models.popularity_validation import PopularityBaselineValidation
 from validated_models.als_validation import ALSValidation
 from pyspark.ml.recommendation import ALS
-from validated_models.als_validation import CustomALS
 
 
 # And pyspark.sql to get the spark session
@@ -48,7 +47,6 @@ def main(spark, in_path, out_path):
     X_train, X_test, X_val = ratings_train.drop('timestamp'), ratings_test.drop(
         'timestamp'), ratings_validation.drop('timestamp')
     
-    '''
     ratings_per_user = ratings_train.groupby('userId').agg({"rating":"count"})
     ratings_per_user.describe().show()
 
@@ -73,20 +71,13 @@ def main(spark, in_path, out_path):
     print("MAP@100 on test set: ", baseline_metrics_test.meanAveragePrecision)
     print("NCDG@100 on training set: ", baseline_metrics_train.ndcgAt(100))
     print("NCDG@100 on test set: ", baseline_metrics_test.ndcgAt(100))
-    '''
     
     
     
     print("Fitting ALS model")
     print("Tuning hyperparameters based on Mean Average Precision")
-    als = CustomALS(rank = 10, regParam=0.1, maxIter=10)
-    als.fit(X_train)
-    als_metrics_val = als.evaluate(X_val)
-    val_score = als_metrics_val.meanAveragePrecision
-    print(val_score)
     
     
-    '''
     rank_values = [10, 20, 30]
     regParam_values = [0.01, 0.1, 1, 10]
     maxIter_values = [10, 15]
@@ -100,7 +91,6 @@ def main(spark, in_path, out_path):
     print("MAP@100 on test set: ", als_metrics_test.meanAveragePrecision)
     print("NCDG@100 on training set: ", als_metrics_train.ndcgAt(100))
     print("NCDG@100 on test set: ", als_metrics_test.ndcgAt(100))
-    '''
     
 
 
