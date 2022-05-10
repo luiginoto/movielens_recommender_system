@@ -84,7 +84,7 @@ def main(spark, in_path, out_path):
     
     best_als_model = ALSValidation(X_train, X_val, rank_vals=rank_values, regParam_vals=regParam_values, maxIter_vals=maxIter_values)
     
-    print("Evaluating best Popularity baseline model")
+    print("Evaluating best ALS model")
     als_metrics_train = best_als_model.evaluate(X_train)
     als_metrics_test = best_als_model.evaluate(X_test)
     print("MAP@100 on training set: ", als_metrics_train.meanAveragePrecision)
