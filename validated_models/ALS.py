@@ -37,6 +37,7 @@ class CustomALS():
             fn.collect_list('movieId').alias('liked_movies'))
 
         predsAndlabels = UserMovies.join(self.preds, 'userId')
+        predsAndlabels.show()
         predsAndlabels.printSchema()
         self.predsAndlabels = predsAndlabels.rdd.map(tuple)
 
