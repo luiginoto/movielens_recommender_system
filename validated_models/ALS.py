@@ -36,7 +36,8 @@ class CustomALS():
         UserMovies = data.groupBy('userId').agg(
             fn.collect_list('movieId').alias('liked_movies'))
 
-        predsAndlabels = UserMovies.join(self.preds, 'userId')
+        predsAndlabels = UserMovies.join(self.preds, 'userId').select(fn.col('userId'), fn.col('recommendations').cast(
+            'array<integer>').alias('recommendations'), fn.col('liked_movies').cast('array<integer>').alias('liked_movies'))
         predsAndlabels.show()
         predsAndlabels.printSchema()
         self.predsAndlabels = predsAndlabels.rdd.map(tuple)
