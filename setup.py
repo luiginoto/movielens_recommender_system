@@ -12,9 +12,6 @@ from setuptools import setup, find_packages
 with open('README.md') as f:
     readme = f.read()
 
-with open('LICENSE') as f:
-    license = f.read()
-
 setup(
     name='Group26_MovieLens',
     version='0.4.2',
@@ -23,7 +20,6 @@ setup(
     author='group26',
     author_email='ga947@nyu.edu',
     url='https://github.com/nyu-big-data/final-project-group-26',
-    license=license,
     packages=find_packages(exclude=('tests', 'scratch', 'data', 'dist', 'Group26_MovieLens.egg-info', 'build'))
 )
 
