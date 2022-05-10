@@ -82,8 +82,8 @@ def main(spark, in_path, out_path):
     als = CustomALS(rank = 10, regParam=0.1, maxIter=10)
     als.fit(X_train)
     als_metrics_val = als.evaluate(X_val)
-    val_score = als_metrics_val.meanAveragePrecision
-    print(val_score)
+    #val_score = als_metrics_val.meanAveragePrecision
+    #print(val_score)
     
     
     '''

@@ -37,7 +37,8 @@ class CustomALS():
             fn.collect_list('movieId').alias('liked_movies'))
 
         predsAndlabels = self.preds.join(UserMovies, 'userId')
-        self.predsAndlabels = predsAndlabels.rdd.map(tuple)
+        predsAndlabels.printSchema()
+        #self.predsAndlabels = predsAndlabels.rdd.map(tuple)
 
         metrics = RankingMetrics(self.predsAndlabels)
 
