@@ -31,7 +31,7 @@ class PopularityBaseline():
 
     def evaluate(self, results, test_set):
         data = test_set.filter(test_set.rating > 2.5).drop(
-            'rating', 'timestap')
+            'rating', 'timestamp')
 
         results = results.withColumn('id', fn.lit(1)).groupBy(
             'id').agg(fn.collect_list('movieId').alias('top_movies'))

@@ -29,18 +29,17 @@ def PopularityBaselineValidation(X_train, X_val, damping_vals, threshold_vals = 
             elif metric_val == 'recallAtK':
                 val_score = baseline_metrics_val.recallAt(k_val)
                 metric_val = 'RECALL'
-            
+
             if verbose:
                 print('Score for PopularityBaseline model given these parameters using {m}@{k}: {s}'.format(m = metric_val, k = k_val, s = val_score))
                 print('------------------------------------------------------------------------------------------------------------------------------')
-            
+
             if val_score > best_score:
                 best_score = val_score
                 best_baseline_model = baseline
-   
+
     print('==============================================================================================================================')
     print("Best PopularityBaseline model given parameters using {m}@{k}: Damping {d} | Threshold: {t}".format(
-        d=d, t=t, m = metric_val, k = k_val))
+        d=best_baseline_model.damping, t=best_baseline_model.threshold, m = metric_val, k = k_val))
     print("Best PopularityBaseline model score given these parameters: ", best_score)
     return best_baseline_model
-    

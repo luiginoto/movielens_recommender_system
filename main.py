@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # Use getpass to obtain user netID
 import getpass
-from validated_models.ALS import ValidatedALS
+from validated_models.ALS import CustomALS
 from dataset_split.utils import readRDD
 from validated_models.popularity import PopularityBaseline
 from validated_models.popularity_validation import PopularityBaselineValidation
+from validated_models.als_validation import ALSValidation
 from pyspark.ml.recommendation import ALS
 
 
@@ -89,7 +90,24 @@ def main(spark, in_path, out_path):
     print("NCDG@100 on test set: ", baseline_metrics_test.ndcgAt(100))
     
     
-    als = ValidatedALS(ratings=X_train, test_ratings=X_test, seed=0).validate(rank=[10, 20, 30], regParam=[0.01, 0.1, 1, 10], maxIter=[10, 15])
+    
+    print("Fitting ALS model")
+    print("Tuning hyperparameters based on Mean Average Precision")
+    
+    rank_values = [10, 20, 30]
+    regParam_values = [0.01, 0.1, 1, 10]
+    maxIter_values = [10, 15]
+    
+    best_als_model = ALSValidation(X_train, X_val, rank_vals=rank_values, regParam_vals=regParam_values, maxIter_vals=maxIter_values)
+    
+    print("Evaluating best Popularity baseline model")
+    als_metrics_train = best_als_model.evaluate(X_train)
+    als_metrics_test = best_als_model.evaluate(X_test)
+    print("MAP@100 on training set: ", als_metrics_train.meanAveragePrecision)
+    print("MAP@100 on test set: ", als_metrics_test.meanAveragePrecision)
+    print("NCDG@100 on training set: ", als_metrics_train.ndcgAt(100))
+    print("NCDG@100 on test set: ", als_metrics_test.ndcgAt(100))
+    
 
 
 # Only enter this block if we're in main

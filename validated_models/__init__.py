@@ -1,4 +1,5 @@
 print(f'Invoking __init__.py for {__name__}')
-from .ALS import ValidatedALS
 from .popularity import PopularityBaseline
+from .ALS import CustomALS
 from .popularity_validation import PopularityBaselineValidation
+from .als_validation import ALSValidation
