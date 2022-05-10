@@ -39,6 +39,6 @@ class CustomALS():
 
         self.predsAndlabels = self.preds.join(UserMovies, 'userId').rdd.map(tuple)
 
-        metrics = RankingMetrics(predictionAndLabels)
+        metrics = RankingMetrics(self.predsAndlabels)
 
         return metrics
