@@ -7,6 +7,7 @@ from validated_models.popularity import PopularityBaseline
 from validated_models.popularity_validation import PopularityBaselineValidation
 from validated_models.als_validation import ALSValidation
 from pyspark.ml.recommendation import ALS
+from validated_models.als_validation import CustomALS
 
 
 # And pyspark.sql to get the spark session
@@ -47,6 +48,7 @@ def main(spark, in_path, out_path):
     X_train, X_test, X_val = ratings_train.drop('timestamp'), ratings_test.drop(
         'timestamp'), ratings_validation.drop('timestamp')
     
+    '''
     ratings_per_user = ratings_train.groupby('userId').agg({"rating":"count"})
     ratings_per_user.describe().show()
 
@@ -63,23 +65,6 @@ def main(spark, in_path, out_path):
     print("Fitting Popularity baseline model")
     print("Tuning hyperparameters based on Mean Average Precision")
     damping_values = [0, 5, 10, 15, 20]
-    # best_score = 0
-    # best_baseline_model = None
-    # for damping in damping_values:
-    #     baseline = PopularityBaseline(damping = damping)
-    #     baseline.fit(X_train)
-    #     baseline_metrics_val = baseline.evaluate(baseline.results, X_val)
-    #     val_score = baseline_metrics_val.meanAveragePrecision
-
-    #     print("Fitting popularity baseline given parameters: Damping {d}".format(d=damping))
-    #     print('Score for popularity baseline given these parameters using MAP@100: ', val_score)
-    #     print('------------------------------------------------------------------------------------------------------------------------------')     
-
-    #     if val_score > best_score:
-    #         best_score = val_score
-    #         best_baseline_model = baseline
-
-    # print('Best Popularity baseline model: ', best_baseline_model)
     best_baseline_model = PopularityBaselineValidation(X_train, X_val, damping_values)
     print("Evaluating best Popularity baseline model")
     baseline_metrics_train = best_baseline_model.evaluate(best_baseline_model.results, X_train)
@@ -88,12 +73,20 @@ def main(spark, in_path, out_path):
     print("MAP@100 on test set: ", baseline_metrics_test.meanAveragePrecision)
     print("NCDG@100 on training set: ", baseline_metrics_train.ndcgAt(100))
     print("NCDG@100 on test set: ", baseline_metrics_test.ndcgAt(100))
+    '''
     
     
     
     print("Fitting ALS model")
     print("Tuning hyperparameters based on Mean Average Precision")
+    als = CustomALS(rank = 10, regParam=0.1, maxIter=10)
+    als.fit(X_train)
+    als_metrics_val = als.evaluate(X_val)
+    val_score = als_metrics_val.meanAveragePrecision
+    print(val_score)
     
+    
+    '''
     rank_values = [10, 20, 30]
     regParam_values = [0.01, 0.1, 1, 10]
     maxIter_values = [10, 15]
@@ -107,6 +100,7 @@ def main(spark, in_path, out_path):
     print("MAP@100 on test set: ", als_metrics_test.meanAveragePrecision)
     print("NCDG@100 on training set: ", als_metrics_train.ndcgAt(100))
     print("NCDG@100 on test set: ", als_metrics_test.ndcgAt(100))
+    '''
     
 
 
