@@ -4,8 +4,7 @@
 
 import pyspark.sql.functions as fn
 from pyspark.ml.recommendation import ALS
-from pyspark.sql import functions as fn
-from pyspark.ml.evaluation import RankingEvaluator
+from pyspark.mllib.evaluation import RankingMetrics
 
 
 class CustomALS():
@@ -26,7 +25,7 @@ class CustomALS():
     def fit(self, ratings, top_n=100):
         self.fitted_model = self.model.fit(ratings)
         self.fitted = True
-        df_recs = self.model.recommendForAllUsers(top_n).withColumn(
+        df_recs = self.fitted_model.recommendForAllUsers(top_n).withColumn(
             'recommendations', fn.explode((fn.col('recommendations'))))
         self.preds = df_recs.withColumn('recommendations', df_recs.recommendations.getItem(
                 'movieId')).groupBy('userId').agg(fn.collect_list('recommendations').alias('recommendations'))
