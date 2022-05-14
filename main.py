@@ -26,10 +26,12 @@ def main(spark, in_path, out_path):
     '''
     print('LOADING....')
     print('')
+    
+    seed = 69
 
     print('Splitting the ratings dataset into training, validation and test set')
     ratings_train, ratings_test, ratings_validation = dataset_split.ratingsSplit(
-        spark, in_path, small=True, column_name='ratings', train_ratio=0.8, user_ratio=0.5)
+        spark, in_path, small=True, column_name='ratings', train_ratio=0.8, user_ratio=0.5, seed =seed)
     ratings_train.show()
 
     #movie_title_df, _ = readRDD(spark, in_path, small=True, column_name = 'movies')
