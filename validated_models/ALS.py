@@ -38,8 +38,8 @@ class CustomALS():
 
         self.predsAndlabels = self.preds.join(UserMovies, 'userId')
         
-        predsAndlabels = self.predsAndlabels.select('recommendations', 'liked_movies')
+        predsAndlabels_rdd = self.predsAndlabels.select('recommendations', 'liked_movies').rdd.map(tuple)
 
-        metrics = RankingMetrics(predsAndlabels.rdd.map(tuple))
+        metrics = RankingMetrics(predsAndlabels_rdd)
 
         return metrics
