@@ -73,6 +73,7 @@ def main(spark, in_path, out_path):
     print("MAP@100 on test set: ", baseline_metrics_test.meanAveragePrecision)
     print("NCDG@100 on training set: ", baseline_metrics_train.ndcgAt(100))
     print("NCDG@100 on test set: ", baseline_metrics_test.ndcgAt(100))
+    best_popularity_scores = best_baseline_model.popularity
     
     
     
@@ -93,6 +94,35 @@ def main(spark, in_path, out_path):
     print("MAP@100 on test set: ", als_metrics_test.meanAveragePrecision)
     print("NCDG@100 on training set: ", als_metrics_train.ndcgAt(100))
     print("NCDG@100 on test set: ", als_metrics_test.ndcgAt(100))
+    best_user_factors = best_als_model.fitted_model.userFactors
+    best_item_factors = best_als_model.fitted_model.itemFactors
+    best_predsAndlabels = best_als_model.predsAndlabels
+    
+    
+    
+    
+    print()
+    print('Exporting Popularity scores of best Popularity baseline model into CSV')
+    
+    best_popularity_scores.repartition(1).write.csv(out_path + '/final_model_results/popularity_scores.csv', mode='overwrite')
+    
+    print()
+    print('Exporting User and Item factors of best ALS model into CSV')
+    
+    best_user_factors.withColumn("features", best_user_factors.features.cast("array<string>"))\
+        .withColumn("features", fn.concat_ws(",",fn.col("features")))\
+        .repartition(1).write.csv(out_path + '/final_model_results/user_factors.csv', mode='overwrite')
+        
+    best_item_factors.withColumn("features", best_item_factors.features.cast("array<string>"))\
+        .withColumn("features", fn.concat_ws(",",fn.col("features")))\
+        .repartition(1).write.csv(out_path + '/final_model_results/item_factors.csv', mode='overwrite')
+        
+    print()
+    print('Exporting Predictions of best ALS model with test Ground Truth labels for each user into CSV')
+    
+    best_predsAndlabels.withColumn("recommendations", fn.concat_ws(",",fn.col("recommendations")))\
+        .withColumn("liked_movies", fn.concat_ws(",",fn.col("liked_movies")))\
+        .repartition(1).write.csv(out_path + '/final_model_results/predsAndlabels.csv', mode='overwrite')
     
 
 
@@ -104,6 +134,7 @@ if __name__ == "__main__":
         .config('spark.shuffle.useOldFetchProtocol', 'true')\
         .config('spark.shuffle.service.enabled', 'true')\
         .config('dynamicAllocation.enabled', 'true')\
+        .config('spark.task.maxFailures', '2')\
         .getOrCreate()
 
     # Get user netID from the command line
