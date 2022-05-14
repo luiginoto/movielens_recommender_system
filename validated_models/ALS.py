@@ -36,8 +36,8 @@ class CustomALS():
         UserMovies = data.groupBy('userId').agg(
             fn.collect_list('movieId').alias('liked_movies'))
 
-        self.predsAndlabels = self.preds.join(UserMovies, 'userId').select('recommendations', 'liked_movies').rdd.map(tuple)
+        self.predsAndlabels = self.preds.join(UserMovies, 'userId')
 
-        metrics = RankingMetrics(self.predsAndlabels)
+        metrics = RankingMetrics(self.predsAndlabels.select('recommendations', 'liked_movies').rdd.map(tuple))
 
         return metrics
