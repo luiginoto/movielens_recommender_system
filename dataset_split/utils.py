@@ -55,10 +55,12 @@ def readRDD(spark, dirstring, small, column_name):
 def ratings_split(rdd, train_ratio=0.6, user_ratio=0.5):
     windowSpec = Window.partitionBy('userId').orderBy('timestamp')
 
+    counts = rdd.groupBy('userId').agg(fn.count('rating').alias('n_ratings'))
+    rdd = rdd.join(counts, 'userId')
+
     ratings = rdd \
-        .withColumn('row_number', fn.row_number().over(windowSpec)) \
-        .withColumn('n_ratings', fn.count('rating').over(windowSpec)) \
-        .withColumn('prop_idx', (fn.col('row_number') / fn.col('n_ratings')))
+       .withColumn('row_number', fn.row_number().over(windowSpec)) \
+       .withColumn('prop_idx', (fn.col('row_number') / fn.col('n_ratings')))
     ratings.show(20)
 
     ratings_train = ratings.filter(ratings.prop_idx <= train_ratio).drop(
