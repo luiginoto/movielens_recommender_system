@@ -98,8 +98,9 @@ def main(spark, in_path, out_path):
     best_item_factors = best_als_model.fitted_model.itemFactors
     best_predsAndlabels = best_als_model.predsAndlabels
     
-    
-    
+    print()
+    print('Exporting training ratings')
+    ratings_train.repartition(1).write.csv(out_path + '/final_model_results/ratings_train.csv', mode='overwrite')
     
     print()
     print('Exporting Popularity scores of best Popularity baseline model into CSV')
