@@ -258,7 +258,3 @@ NCDG@100 on test set:  0.008737077477740428
 
 LARGE DATASET
 ================================
-Popularity
-
-
-ALS
