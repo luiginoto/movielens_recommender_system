@@ -6,6 +6,7 @@ from dataset_split.utils import readRDD
 from validated_models.popularity import PopularityBaseline
 from validated_models.popularity_validation import PopularityBaselineValidation
 from validated_models.als_validation import ALSValidation
+import pyspark.sql.functions as fn
 from pyspark.ml.recommendation import ALS
 
 
@@ -31,7 +32,7 @@ def main(spark, in_path, out_path):
 
     print('Splitting the ratings dataset into training, validation and test set')
     ratings_train, ratings_test, ratings_validation = dataset_split.ratingsSplit(
-        spark, in_path, small=True, column_name='ratings', train_ratio=0.8, user_ratio=0.5, seed =seed)
+        spark, in_path, small=False, column_name='ratings', train_ratio=0.8, user_ratio=0.5, seed =seed)
     ratings_train.show()
 
     #movie_title_df, _ = readRDD(spark, in_path, small=True, column_name = 'movies')
@@ -75,15 +76,13 @@ def main(spark, in_path, out_path):
     print("NCDG@100 on test set: ", baseline_metrics_test.ndcgAt(100))
     best_popularity_scores = best_baseline_model.popularity
     
-    
-    
     print("Fitting ALS model")
     print("Tuning hyperparameters based on Mean Average Precision")
     
-    
-    rank_values = [10, 20, 30]
-    regParam_values = [0.01, 0.1, 1, 10]
-    maxIter_values = [10, 15]
+    rank_values = [30, 40, 50]
+    regParam_values = [0.001, 0.01, 0.1]
+    maxIter_values = [20, 22, 26, 28]
+  
     
     best_als_model = ALSValidation(X_train, X_val, rank_vals=rank_values, regParam_vals=regParam_values, maxIter_vals=maxIter_values)
     
@@ -131,7 +130,7 @@ def main(spark, in_path, out_path):
 if __name__ == "__main__":
 
     spark = SparkSession.builder.appName('project')\
-        .config('spark.submit.pyFiles', 'Group26_MovieLens-0.4.2-py3-none-any.zip')\
+        .config('spark.submit.pyFiles', 'Group26_MovieLens-0.5.0-py3-none-any.zip')\
         .config('spark.shuffle.useOldFetchProtocol', 'true')\
         .config('spark.shuffle.service.enabled', 'true')\
         .config('dynamicAllocation.enabled', 'true')\

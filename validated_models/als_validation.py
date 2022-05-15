@@ -11,7 +11,7 @@ def ALSValidation(X_train, X_val, rank_vals = [10], regParam_vals = [0.1], maxIt
         for regParam in regParam_vals:
             for maxIter in maxIter_vals:
                 if verbose:
-                    print("Fitting PopularityBaseline model given parameters: Rank: {rank} | regParam: {regParam} | maxIter: {maxIter} ".format(
+                    print("Fitting ALS model given parameters: Rank: {rank} | regParam: {regParam} | maxIter: {maxIter} ".format(
                     rank=rank, regParam=regParam, maxIter=maxIter))
                 als = CustomALS(rank = rank, regParam=regParam, maxIter=maxIter)
                 als.fit(X_train)

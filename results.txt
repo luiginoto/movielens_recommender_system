@@ -1,246 +1,264 @@
 SMALL DATASET
 ================================
-ValidatedALS(ratings=X_train, test_ratings=X_val, seed=0).validate(rank=[10, 20, 30], regParam=[0.01, 0.1, 0.5, 1], maxIter=[10, 15])
-
-Fitting ALS model given parameters: Rank 10 | MaxIter: 10 | RegParam: 0.01 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.023130893920591564
+Fitting Popularity baseline model
+Tuning hyperparameters based on Mean Average Precision
+Fitting PopularityBaseline model given parameters: Damping 0 | Threshold: None
+Score for PopularityBaseline model given these parameters using MAP@100: 2.3787322737618475e-05
 ------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 10 | MaxIter: 15 | RegParam: 0.01 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.022952174745980457
+Fitting PopularityBaseline model given parameters: Damping 5 | Threshold: None
+Score for PopularityBaseline model given these parameters using MAP@100: 2.3787322737618475e-05
 ------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 20 | MaxIter: 10 | RegParam: 0.01 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.06211429426217991
+Fitting PopularityBaseline model given parameters: Damping 10 | Threshold: None
+Score for PopularityBaseline model given these parameters using MAP@100: 2.3787322737618475e-05
 ------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 20 | MaxIter: 15 | RegParam: 0.01 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.06359151777859261
+Fitting PopularityBaseline model given parameters: Damping 15 | Threshold: None
+Score for PopularityBaseline model given these parameters using MAP@100: 2.3787322737618475e-05
 ------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 30 | MaxIter: 10 | RegParam: 0.01 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.06620919295431764
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 30 | MaxIter: 15 | RegParam: 0.01 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.0644871747457114
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 10 | MaxIter: 10 | RegParam: 0.1 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.017881811279578823
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 10 | MaxIter: 15 | RegParam: 0.1 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.018744213146732407
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 20 | MaxIter: 10 | RegParam: 0.1 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.05219062199679962
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 20 | MaxIter: 15 | RegParam: 0.1 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.04432575948391861
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 30 | MaxIter: 10 | RegParam: 0.1 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.04097929239992897
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 30 | MaxIter: 15 | RegParam: 0.1 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.03503788538876431
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 10 | MaxIter: 10 | RegParam: 0.5 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.019950269368844885
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 10 | MaxIter: 15 | RegParam: 0.5 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.014424156668135773
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 20 | MaxIter: 10 | RegParam: 0.5 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.042638534438013874
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 20 | MaxIter: 15 | RegParam: 0.5 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.025033153626218985
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 30 | MaxIter: 10 | RegParam: 0.5 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.034898389821458695
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 30 | MaxIter: 15 | RegParam: 0.5 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.022958602627981117
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 10 | MaxIter: 10 | RegParam: 1 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.01841181637302427
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 10 | MaxIter: 15 | RegParam: 1 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.01084783489144449
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 20 | MaxIter: 10 | RegParam: 1 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.04099451613655722
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 20 | MaxIter: 15 | RegParam: 1 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.02257238655000342
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 30 | MaxIter: 10 | RegParam: 1 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.032994768914119
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 30 | MaxIter: 15 | RegParam: 1 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.017879758858735013
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 10 | MaxIter: 10 | RegParam: 10 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.004317110957478341
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 10 | MaxIter: 15 | RegParam: 10 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.007570244682346597
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 20 | MaxIter: 10 | RegParam: 10 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.00404535887097745
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 20 | MaxIter: 15 | RegParam: 10 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.008791192805880362
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 30 | MaxIter: 10 | RegParam: 10 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.005061296793751554
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 30 | MaxIter: 15 | RegParam: 10 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.008240980222231789
+Fitting PopularityBaseline model given parameters: Damping 20 | Threshold: None
+Score for PopularityBaseline model given these parameters using MAP@100: 2.3787322737618475e-05
 ------------------------------------------------------------------------------------------------------------------------------
 ==============================================================================================================================
-Best ALS model given parameters using MAP@100: Rank 30 | MaxIter: 10 | RegParam: 0.01 | ColdStartStrategy: nan |
-Best ALS model MAP@100 score given these parameters on test set:  0.05876369667001602
-Best ALS model NCDG@100 score given these parameters on test set:  0.22506030537559826
-
-Popularity
-Tuning hyperparameters based on Mean Average Precision
-Fitting popularity baseline given parameters: Damping 0
-Score for popularity baseline given these parameters using MAP@100:  0.00879240048486507
-------------------------------------------------------------------------------------------------------------------------------
-Fitting popularity baseline given parameters: Damping 5
-Score for popularity baseline given these parameters using MAP@100:  0.049065488727106796
-------------------------------------------------------------------------------------------------------------------------------
-Fitting popularity baseline given parameters: Damping 10
-Score for popularity baseline given these parameters using MAP@100:  0.04850010091390639
-------------------------------------------------------------------------------------------------------------------------------
-Fitting popularity baseline given parameters: Damping 15
-Score for popularity baseline given these parameters using MAP@100:  0.04790638252508725
-------------------------------------------------------------------------------------------------------------------------------
-Fitting popularity baseline given parameters: Damping 20
-Score for popularity baseline given these parameters using MAP@100:  0.04778576364842465
-------------------------------------------------------------------------------------------------------------------------------
-Best Popularity baseline model:  PopularityBaseline(threshold = None, damping = 5, fitted = True)
+Best PopularityBaseline model given parameters using MAP@100: Damping 0 | Threshold: None
+Best PopularityBaseline model score given these parameters:  2.3787322737618475e-05
 Evaluating best Popularity baseline model
-MAP@100 on training set:  0.2176074962223092
-MAP@100 on test set:  0.0561632772002529
-NCDG@100 on training set:  0.4047964367634515
-NCDG@100 on test set:  0.24490175385336133
+MAP@100 on training set:  0.00015383422110129492
+MAP@100 on test set:  1.2843059716886974e-05
+NCDG@100 on training set:  0.0021425503365665776
+NCDG@100 on test set:  0.0005504366056886732
+
+
+Fitting ALS model
+Tuning hyperparameters based on Mean Average Precision
+Fitting ALS model given parameters: Rank: 10 | regParam: 0.001 | maxIter: 10 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 10 | regParam: 0.001 | maxIter: 15 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 10 | regParam: 0.001 | maxIter: 20 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 10 | regParam: 0.001 | maxIter: 25 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 10 | regParam: 0.01 | maxIter: 10 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 10 | regParam: 0.01 | maxIter: 15 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 10 | regParam: 0.01 | maxIter: 20 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 10 | regParam: 0.01 | maxIter: 25 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 10 | regParam: 0.1 | maxIter: 10 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 10 | regParam: 0.1 | maxIter: 15 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 10 | regParam: 0.1 | maxIter: 20 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 10 | regParam: 0.1 | maxIter: 25 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 20 | regParam: 0.001 | maxIter: 10 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 20 | regParam: 0.001 | maxIter: 15 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 20 | regParam: 0.001 | maxIter: 20 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 20 | regParam: 0.001 | maxIter: 25 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 20 | regParam: 0.01 | maxIter: 10 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 20 | regParam: 0.01 | maxIter: 15 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 20 | regParam: 0.01 | maxIter: 20 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 20 | regParam: 0.01 | maxIter: 25 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 20 | regParam: 0.1 | maxIter: 10 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 20 | regParam: 0.1 | maxIter: 15 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 20 | regParam: 0.1 | maxIter: 20 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 20 | regParam: 0.1 | maxIter: 25 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 30 | regParam: 0.001 | maxIter: 10 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 30 | regParam: 0.001 | maxIter: 15 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 30 | regParam: 0.001 | maxIter: 20 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 30 | regParam: 0.001 | maxIter: 25 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 30 | regParam: 0.01 | maxIter: 10 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 30 | regParam: 0.01 | maxIter: 15 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 30 | regParam: 0.01 | maxIter: 20 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 30 | regParam: 0.01 | maxIter: 25 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 30 | regParam: 0.1 | maxIter: 10 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 30 | regParam: 0.1 | maxIter: 15 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 30 | regParam: 0.1 | maxIter: 20 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 30 | regParam: 0.1 | maxIter: 25 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 40 | regParam: 0.001 | maxIter: 10 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 40 | regParam: 0.001 | maxIter: 15 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 40 | regParam: 0.001 | maxIter: 20 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 40 | regParam: 0.001 | maxIter: 25 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 40 | regParam: 0.01 | maxIter: 10 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 40 | regParam: 0.01 | maxIter: 15 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 40 | regParam: 0.01 | maxIter: 20 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 40 | regParam: 0.01 | maxIter: 25 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 40 | regParam: 0.1 | maxIter: 10 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 40 | regParam: 0.1 | maxIter: 15 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 40 | regParam: 0.1 | maxIter: 20 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 40 | regParam: 0.1 | maxIter: 25 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 50 | regParam: 0.001 | maxIter: 10 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 50 | regParam: 0.001 | maxIter: 15 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 50 | regParam: 0.001 | maxIter: 20 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 50 | regParam: 0.001 | maxIter: 25 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 50 | regParam: 0.01 | maxIter: 10 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 50 | regParam: 0.01 | maxIter: 15 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 50 | regParam: 0.01 | maxIter: 20 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 50 | regParam: 0.01 | maxIter: 25 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 50 | regParam: 0.1 | maxIter: 10 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 50 | regParam: 0.1 | maxIter: 15 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 50 | regParam: 0.1 | maxIter: 20 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 50 | regParam: 0.1 | maxIter: 25 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 60 | regParam: 0.001 | maxIter: 10 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 60 | regParam: 0.001 | maxIter: 15 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 60 | regParam: 0.001 | maxIter: 20 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 60 | regParam: 0.001 | maxIter: 25 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 60 | regParam: 0.01 | maxIter: 10 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 60 | regParam: 0.01 | maxIter: 15 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 60 | regParam: 0.01 | maxIter: 20 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 60 | regParam: 0.01 | maxIter: 25 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 60 | regParam: 0.1 | maxIter: 10 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 60 | regParam: 0.1 | maxIter: 15 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 60 | regParam: 0.1 | maxIter: 20 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+Fitting ALS model given parameters: Rank: 60 | regParam: 0.1 | maxIter: 25 
+Score for ALS model given these parameters using MAP@100: 0.0007802637700404185
+------------------------------------------------------------------------------------------------------------------------------
+==============================================================================================================================
+Best ALS model given parameters using MAP@100: Rank: 10 | regParam: 0.001 | maxIter: 10
+Best ALS model score given these parameters:  0.0007802637700404185
+Evaluating best ALS model
+MAP@100 on training set:  0.0005126964693008275
+MAP@100 on test set:  0.0005339828696893901
+NCDG@100 on training set:  0.009840399281951198
+NCDG@100 on test set:  0.008737077477740428
 
 
 
 LARGE DATASET
 ================================
-ValidatedALS(ratings=X_train, test_ratings=X_val, seed=0).validate(rank=[10, 20, 30], regParam=[0.01, 0.1, 0.5, 1], maxIter=[10, 15])
-
-Fitting ALS model given parameters: Rank 10 | MaxIter: 10 | RegParam: 0.01 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.00028996535051047215
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 10 | MaxIter: 15 | RegParam: 0.01 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.0002990638994487062
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 20 | MaxIter: 10 | RegParam: 0.01 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.0009132201199882416
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 20 | MaxIter: 15 | RegParam: 0.01 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.0008354758680312387
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 30 | MaxIter: 10 | RegParam: 0.01 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.0014375423856109778
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 30 | MaxIter: 15 | RegParam: 0.01 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.0013221137583398124
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 10 | MaxIter: 10 | RegParam: 0.1 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.0006464368846180615
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 10 | MaxIter: 15 | RegParam: 0.1 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.0015783833946610962
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 20 | MaxIter: 10 | RegParam: 0.1 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.0025726747457497025
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 20 | MaxIter: 15 | RegParam: 0.1 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.003470744119227772
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 30 | MaxIter: 10 | RegParam: 0.1 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.001919749724012063
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 30 | MaxIter: 15 | RegParam: 0.1 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.003435013703508312
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 10 | MaxIter: 10 | RegParam: 0.5 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.002954320508069956
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 10 | MaxIter: 15 | RegParam: 0.5 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 9.797201303124621e-05
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 20 | MaxIter: 10 | RegParam: 0.5 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.0020795527273718066
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 20 | MaxIter: 15 | RegParam: 0.5 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 8.790757251476303e-05
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 30 | MaxIter: 10 | RegParam: 0.5 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.00223702681853367
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 30 | MaxIter: 15 | RegParam: 0.5 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 9.485333956088633e-05
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 10 | MaxIter: 10 | RegParam: 1 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.00336652682526886
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 10 | MaxIter: 15 | RegParam: 1 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 3.4820404422844763e-05
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 20 | MaxIter: 10 | RegParam: 1 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.0012205640555038413
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 20 | MaxIter: 15 | RegParam: 1 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 1.585443220355686e-05
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 30 | MaxIter: 10 | RegParam: 1 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.0018027044266558767
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 30 | MaxIter: 15 | RegParam: 1 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 1.5013872586703434e-05
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 10 | MaxIter: 10 | RegParam: 10 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.0008293892245168772
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 10 | MaxIter: 15 | RegParam: 10 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.0013373470083230714
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 20 | MaxIter: 10 | RegParam: 10 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.0007005156684403448
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 20 | MaxIter: 15 | RegParam: 10 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.0012957221446235944
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 30 | MaxIter: 10 | RegParam: 10 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.0007642511253037738
-------------------------------------------------------------------------------------------------------------------------------
-Fitting ALS model given parameters: Rank 30 | MaxIter: 15 | RegParam: 10 | ColdStartStrategy: nan |
-Score for ALS model given these parameters using MAP@100: 0.0013775583619520906
-------------------------------------------------------------------------------------------------------------------------------
-==============================================================================================================================
-Best ALS model given parameters using MAP@100: Rank 20 | MaxIter: 15 | RegParam: 0.1 | ColdStartStrategy: nan |
-Best ALS model score given these parameters:  0.003470744119227772
-
-
 Popularity
-Fitting popularity baseline given parameters: Damping 0
-Score for popularity baseline given these parameters using MAP@100:  1.2609258491094385e-05
-------------------------------------------------------------------------------------------------------------------------------
-Fitting popularity baseline given parameters: Damping 5
-Score for popularity baseline given these parameters using MAP@100:  0.03753569011813698
-------------------------------------------------------------------------------------------------------------------------------
-Fitting popularity baseline given parameters: Damping 10
-Score for popularity baseline given these parameters using MAP@100:  0.0434751199114831
-------------------------------------------------------------------------------------------------------------------------------
-Fitting popularity baseline given parameters: Damping 15
-Score for popularity baseline given these parameters using MAP@100:  0.047554468945299
-------------------------------------------------------------------------------------------------------------------------------
-Fitting popularity baseline given parameters: Damping 20
-Score for popularity baseline given these parameters using MAP@100:  0.04989908375569678
-------------------------------------------------------------------------------------------------------------------------------
-Best Popularity baseline model:  PopularityBaseline(threshold = None, damping = 20, fitted = True)
-Evaluating best Popularity baseline model
-MAP@100 on training set:  0.038352835367568415
-MAP@100 on test set:  0.050010853099176335
-NCDG@100 on training set:  0.14706183562421465
-NCDG@100 on test set:  0.19054227254556158
+
+
+ALS
