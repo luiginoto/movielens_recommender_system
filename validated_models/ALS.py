@@ -14,7 +14,7 @@ class ValidatedALS():
 
         self.fitted = False
         self.seed = seed
-        self.predictions = None
+        self.model = None
         self.predsAndlabels = None
         self.score = 0
 
