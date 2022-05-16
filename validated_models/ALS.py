@@ -98,7 +98,7 @@ class ValidatedALS():
         data = self.test_ratings.filter(self.test_ratings.rating > 2.5).drop(
             'rating', 'timestamp')
         UserMovies = data.groupBy('userId').agg(
-            fn.collect_list('movieId').alias('liked_movies'))
+            fn.collect_list('movieId').alias('label'))
 
         # Generate top k movie recommendations for each user
         df_recs = self.model.recommendForAllUsers(top_k).withColumn(
@@ -109,7 +109,8 @@ class ValidatedALS():
 #        self.predsAndlabels = df_label.join(df_recs, 'userId').select(fn.col('recommendations').cast(
 #            'array<double>').alias('recommendations'), fn.col('label').cast('array<double>').alias('label'))
         
-        self.predsAndlabels = df_recs.join(UserMovies, 'userId').select('recommendations', 'liked_movies')
+        self.predsAndlabels = df_recs.join(UserMovies, 'userId').select('recommendations', 'label').cast(
+            'array<double>').alias('recommendations'), fn.col('label').cast('array<double>').alias('label'))
         
 
         if metricName == 'meanAveragePrecision':
