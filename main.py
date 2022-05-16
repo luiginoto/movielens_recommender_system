@@ -5,6 +5,7 @@ from validated_models.ALS import ValidatedALS
 from dataset_split.utils import readRDD
 from validated_models.popularity import PopularityBaseline
 from pyspark.ml.recommendation import ALS
+import pyspark.sql.functions as fn
 
 
 # And pyspark.sql to get the spark session
