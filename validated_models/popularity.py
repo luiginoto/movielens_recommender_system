@@ -13,7 +13,6 @@ class PopularityBaseline():
         self.damping = damping
         self.fitted = False
         self.results = None
-        self.popularity = None
 
     def __repr__(self):
         return 'PopularityBaseline(threshold = ' + str(self.threshold) + ', damping = ' + str(self.damping) + ', fitted = ' + str(self.fitted) + ')'
@@ -25,7 +24,6 @@ class PopularityBaseline():
             ratings = ratings.filter(ratings.counts >= self.threshold)
         results = ratings.withColumn('popularity', fn.col(
             'tot_rating') / fn.col('counts')).drop('tot', 'counts').orderBy(fn.desc('popularity'))
-        self.popularity = results.select('movieId', 'popularity')
         results = results.limit(top_n).select('movieId')
         self.fitted = True
         self.results = results
@@ -33,7 +31,7 @@ class PopularityBaseline():
 
     def evaluate(self, results, test_set):
         data = test_set.filter(test_set.rating > 2.5).drop(
-            'rating', 'timestamp')
+            'rating', 'timestap')
 
         results = results.withColumn('id', fn.lit(1)).groupBy(
             'id').agg(fn.collect_list('movieId').alias('top_movies'))
