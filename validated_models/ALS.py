@@ -6,7 +6,8 @@ import pyspark.sql.functions as fn
 from pyspark.ml.recommendation import ALS
 from pyspark.sql import functions as fn
 from pyspark.ml.evaluation import RankingEvaluator
-
+import time
+import numpy as np
 
 class ValidatedALS():
 
@@ -33,6 +34,8 @@ class ValidatedALS():
         als = ALS(userCol="userId", itemCol="movieId",
                   ratingCol="rating", seed=self.seed)
 
+        tot_times = []
+        
         for reg in regParam:
             for r in rank:
                 for i in maxIter:
@@ -43,8 +46,12 @@ class ValidatedALS():
                     if verbose:
                         print("Fitting ALS model given parameters: Rank {r} | MaxIter: {i} | RegParam: {reg} | ColdStartStrategy: {strat} |".format(
                            r=r, i=i, reg=reg, strat=self.coldStartStrategy))
-
+                    
+                    start = time.time()
                     self.model = als.fit(ratings_train)
+                    end = time.time()
+                    tot_time = end - start
+                    tot_times.append(tot_time)
                     self.fitted = True
 
 #                    self.predictions = self.model.transform(
@@ -60,7 +67,7 @@ class ValidatedALS():
                         elif metric == 'ndcgAtK':
                             print('Score for ALS model given these parameters using NCDG@{k}: {s}'.format(k = top_k, s = self.score))
                             print('------------------------------------------------------------------------------------------------------------------------------')     
-
+                        print("Model fitting time for the given dataset: ",tot_time)
 
                     if self.score > self.best_score:
                         best_model = self.model
@@ -79,6 +86,7 @@ class ValidatedALS():
             print("Best ALS model given parameters using NCDG@{k}: Rank {r} | MaxIter: {i} | RegParam: {reg} | ColdStartStrategy: {strat} |".format(
                 k=top_k, r= best_rank, i=best_maxIter, reg=best_regParam, strat=self.coldStartStrategy))
             print("Best ALS model score given these parameters: ", best_score)
+        print("Average model fitting time for the given dataset: ", np.mean(tot_times))
 
         self.model = best_model
         self.score = best_score
