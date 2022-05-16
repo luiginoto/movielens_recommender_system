@@ -58,7 +58,7 @@ We opted for a more modular approach that enforced more of a OOP approach. Modul
 #### Popularity Baseline
 The ``PopularityBaseline`` class implements a standard popularity baseline model 
 ```math
-P[i] = \Sigma_{u} R_[u,i] / (|R[:,i]| + \beta)
+$P[i] = &Sigma_{u} R_[u,i] / (|R[:,i]| + &beta)$
 ```
 What it do? How it work? Salient points of code?
 ```sh
