@@ -53,16 +53,17 @@ class ValidatedALS():
                     self.model = als.fit(self.ratings)
                     self.fitted = True
 
-                    self.predictions = self.model.transform(
-                        self.test_ratings).drop('timestamp')
-                    self.score, self.predsAndlabels = self.evaluate(
-                        self.predictions, top_k, self.metric)
+#                    self.predictions = self.model.transform(
+#                        self.test_ratings).drop('timestamp')
+#                    self.score, self.predsAndlabels = self.evaluate(
+#                        self.predictions, top_k, self.metric)
+                    self.score, self.predsAndlabels = self.evaluate(top_k, self.metric)
 
                     if self.verbose:
                         if self.metric == 'meanAveragePrecision':
                             print('Score for ALS model given these parameters using MAP@{k}: {s}'.format(k = self.k, s = self.score))
                             print('------------------------------------------------------------------------------------------------------------------------------')     
-                        else:
+                        elif self.metric == 'ndcgAtK'
                             print('Score for ALS model given these parameters using NCDG@{k}: {s}'.format(k = self.k, s = self.score))
                             print('------------------------------------------------------------------------------------------------------------------------------')     
 
@@ -90,17 +91,26 @@ class ValidatedALS():
 
         return self.best_model
 
-    def evaluate(self, predictions, top_k, metricName='meanAveragePrecision'):
-        df_label = predictions.groupBy('userId').agg(
-            fn.collect_list('movieId').alias('label'))
+    def evaluate(self, top_k, metricName='meanAveragePrecision'):
+#        df_label = predictions.groupBy('userId').agg(
+#            fn.collect_list('movieId').alias('label'))
+        
+        data = self.test_ratings.filter(self.test_ratings.rating > 2.5).drop(
+            'rating', 'timestamp')
+        UserMovies = data.groupBy('userId').agg(
+            fn.collect_list('movieId').alias('liked_movies'))
 
         # Generate top k movie recommendations for each user
         df_recs = self.model.recommendForAllUsers(top_k).withColumn(
             'recommendations', fn.explode((fn.col('recommendations'))))
         df_recs = df_recs.withColumn('recommendations', df_recs.recommendations.getItem(
             'movieId')).groupBy('userId').agg(fn.collect_list('recommendations').alias('recommendations'))
-        self.predsAndlabels = df_label.join(df_recs, 'userId').select(fn.col('recommendations').cast(
-            'array<double>').alias('recommendations'), fn.col('label').cast('array<double>').alias('label'))
+        
+#        self.predsAndlabels = df_label.join(df_recs, 'userId').select(fn.col('recommendations').cast(
+#            'array<double>').alias('recommendations'), fn.col('label').cast('array<double>').alias('label'))
+        
+        self.predsAndlabels = df_recs.join(UserMovies, 'userId').select('recommendations', 'liked_movies')
+        
 
         if metricName == 'meanAveragePrecision':
             evaluator = RankingEvaluator(metricName=metricName).setPredictionCol('recommendations')
