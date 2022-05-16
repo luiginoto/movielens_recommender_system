@@ -10,31 +10,25 @@ from pyspark.ml.evaluation import RankingEvaluator
 
 class ValidatedALS():
 
-    def __init__(self, ratings, test_ratings, seed=0):
+    def __init__(self, seed=0):
 
         self.fitted = False
-        self.ratings = ratings
-        self.test_ratings = test_ratings
         self.seed = seed
         self.predictions = None
         self.predsAndlabels = None
-
-    def validate(self, top_k=100, rank=[10], regParam=[0.1], maxIter=[10], coldStartStrategy="nan", verbose=True, metric='meanAveragePrecision'):
-        self.rank = rank
-        self.k = top_k
-        self.regParam = regParam
-        self.maxIter = maxIter
-        self.coldStartStrategy = coldStartStrategy
         self.score = 0
-        self.predsAndlabels = None
-        self.best_predsAndlabels = None
-        self.best_score = 0
-        self.best_model = None
-        self.best_rank = None
-        self.best_maxIter = None
-        self.best_regParam = None
-        self.verbose = verbose
-        self.metric = metric
+
+    def validate(self, ratings_train, ratings_val, top_k=100, rank=[10], regParam=[0.1], maxIter=[10], coldStartStrategy="nan", verbose=True, metric='meanAveragePrecision'):
+        
+        self.k = top_k
+        self.coldStartStrategy = coldStartStrategy
+        
+        best_predsAndlabels = None
+        best_score = 0
+        best_model = None
+        best_rank = None
+        best_maxIter = None
+        best_regParam = None
 
         als = ALS(userCol="userId", itemCol="movieId",
                   ratingCol="rating", seed=self.seed)
@@ -46,56 +40,60 @@ class ValidatedALS():
                     als.setRank(r)
                     als.setRegParam(reg)
 
-                    if self.verbose:
+                    if verbose:
                         print("Fitting ALS model given parameters: Rank {r} | MaxIter: {i} | RegParam: {reg} | ColdStartStrategy: {strat} |".format(
                            r=r, i=i, reg=reg, strat=self.coldStartStrategy))
 
-                    self.model = als.fit(self.ratings)
+                    self.model = als.fit(ratings_train)
                     self.fitted = True
 
 #                    self.predictions = self.model.transform(
 #                        self.test_ratings).drop('timestamp')
 #                    self.score, self.predsAndlabels = self.evaluate(
 #                        self.predictions, top_k, self.metric)
-                    self.score, self.predsAndlabels = self.evaluate(top_k, self.metric)
+                    self.score, self.predsAndlabels = self.evaluate(ratings_val, top_k, metric)
 
-                    if self.verbose:
-                        if self.metric == 'meanAveragePrecision':
-                            print('Score for ALS model given these parameters using MAP@{k}: {s}'.format(k = self.k, s = self.score))
+                    if verbose:
+                        if metric == 'meanAveragePrecision':
+                            print('Score for ALS model given these parameters using MAP@{k}: {s}'.format(k = top_k, s = self.score))
                             print('------------------------------------------------------------------------------------------------------------------------------')     
-                        elif self.metric == 'ndcgAtK':
-                            print('Score for ALS model given these parameters using NCDG@{k}: {s}'.format(k = self.k, s = self.score))
+                        elif metric == 'ndcgAtK':
+                            print('Score for ALS model given these parameters using NCDG@{k}: {s}'.format(k = top_k, s = self.score))
                             print('------------------------------------------------------------------------------------------------------------------------------')     
 
 
                     if self.score > self.best_score:
-                        self.best_model = self.model
-                        self.best_score = self.score
-                        self.best_predsAndlabels = self.predsAndlabels
-                        self.best_rank = r
-                        self.best_maxIter = i
-                        self.best_regParam = reg
+                        best_model = self.model
+                        best_score = self.score
+                        best_predsAndlabels = self.predsAndlabels
+                        best_rank = r
+                        best_maxIter = i
+                        best_regParam = reg
 
         print('==============================================================================================================================')
-        if self.metric == 'meanAveragePrecision':
+        if metric == 'meanAveragePrecision':
             print("Best ALS model given parameters using MAP@{k}: Rank {r} | MaxIter: {i} | RegParam: {reg} | ColdStartStrategy: {strat} |".format(
-                k=self.k, r= self.best_rank, i=self.best_maxIter, reg=self.best_regParam, strat=self.coldStartStrategy))
-            print("Best ALS model score given these parameters: ", self.best_score)
+                k=top_k, r= best_rank, i=best_maxIter, reg=best_regParam, strat=self.coldStartStrategy))
+            print("Best ALS model score given these parameters: ", best_score)
         else: 
             print("Best ALS model given parameters using NCDG@{k}: Rank {r} | MaxIter: {i} | RegParam: {reg} | ColdStartStrategy: {strat} |".format(
-                k=self.k, r= self.best_rank, i=self.best_maxIter, reg=self.best_regParam, strat=self.coldStartStrategy))
-            print("Best ALS model score given these parameters: ", self.best_score)
+                k=top_k, r= best_rank, i=best_maxIter, reg=best_regParam, strat=self.coldStartStrategy))
+            print("Best ALS model score given these parameters: ", best_score)
 
-        self.score = 0
-        self.predsAndlabels = None
+        self.model = best_model
+        self.score = best_score
+        self.predsAndlabels = best_predsAndlabels
+        self.rank = best_rank
+        self.maxIter = best_maxIter
+        self.regParam = best_regParam
+        
+        return self.model
 
-        return self.best_model
-
-    def evaluate(self, top_k, metricName='meanAveragePrecision'):
+    def evaluate(self, ratings_test, top_k, metricName='meanAveragePrecision'):
 #        df_label = predictions.groupBy('userId').agg(
 #            fn.collect_list('movieId').alias('label'))
         
-        data = self.test_ratings.filter(self.test_ratings.rating > 2.5).drop(
+        data = ratings_test.filter(ratings_test.rating > 2.5).drop(
             'rating', 'timestamp')
         UserMovies = data.groupBy('userId').agg(
             fn.collect_list('movieId').alias('label'))
