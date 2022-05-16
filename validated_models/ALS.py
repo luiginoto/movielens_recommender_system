@@ -116,4 +116,4 @@ class ValidatedALS():
         elif metricName == 'ndcgAtK':
             evaluator = RankingEvaluator(metricName=metricName).setPredictionCol('recommendations').setK(top_k)
 
-        return evaluator.evaluate(self.predsAndlabels), self.predsAndlabels
+        return evaluator.evaluate(self.predsAndlabels)
