@@ -57,6 +57,7 @@ We opted for a more modular approach that enforced more of a OOP approach. Modul
 
 #### Popularity Baseline
 The ``PopularityBaseline`` class implements a standard popularity baseline model that gets the utility matrix containing users' ratings and computes the top most popular movies, where popularity is defined as the average rating for each movie.
+ 
  **Parameters:**     
  - Threshold: The number of ratings a movie needs to have to include it in the training data            
  - Damping: The damping factor of the model
