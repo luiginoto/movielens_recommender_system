@@ -69,7 +69,7 @@ class ValidatedALS():
                             print('------------------------------------------------------------------------------------------------------------------------------')     
                         print("Model fitting time for the given dataset: ",tot_time)
 
-                    if self.score > self.best_score:
+                    if self.score > best_score:
                         best_model = self.model
                         best_score = self.score
                         best_predsAndlabels = self.predsAndlabels
@@ -98,9 +98,7 @@ class ValidatedALS():
         return self.model
 
     def evaluate(self, ratings_test, top_k, metricName='meanAveragePrecision'):
-#        df_label = predictions.groupBy('userId').agg(
-#            fn.collect_list('movieId').alias('label'))
-        
+
         data = ratings_test.filter(ratings_test.rating > 2.5).drop(
             'rating', 'timestamp')
         UserMovies = data.groupBy('userId').agg(
@@ -112,13 +110,9 @@ class ValidatedALS():
         df_recs = df_recs.withColumn('recommendations', df_recs.recommendations.getItem(
             'movieId')).groupBy('userId').agg(fn.collect_list('recommendations').alias('recommendations'))
         
-#        self.predsAndlabels = df_label.join(df_recs, 'userId').select(fn.col('recommendations').cast(
-#            'array<double>').alias('recommendations'), fn.col('label').cast('array<double>').alias('label'))
-        
         self.predsAndlabels = df_recs.join(UserMovies, 'userId').select(fn.col('recommendations').cast(
             'array<double>').alias('recommendations'), fn.col('label').cast('array<double>').alias('label'))
         
-
         if metricName == 'meanAveragePrecision':
             evaluator = RankingEvaluator(metricName=metricName).setPredictionCol('recommendations')
         elif metricName == 'ndcgAtK':
