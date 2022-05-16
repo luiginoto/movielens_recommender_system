@@ -109,7 +109,7 @@ class ValidatedALS():
 #        self.predsAndlabels = df_label.join(df_recs, 'userId').select(fn.col('recommendations').cast(
 #            'array<double>').alias('recommendations'), fn.col('label').cast('array<double>').alias('label'))
         
-        self.predsAndlabels = df_recs.join(UserMovies, 'userId').select('recommendations', 'label').cast(
+        self.predsAndlabels = df_recs.join(UserMovies, 'userId').select(fn.col('recommendations').cast(
             'array<double>').alias('recommendations'), fn.col('label').cast('array<double>').alias('label'))
         
 
