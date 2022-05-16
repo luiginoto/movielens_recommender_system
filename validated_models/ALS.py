@@ -63,7 +63,7 @@ class ValidatedALS():
                         if self.metric == 'meanAveragePrecision':
                             print('Score for ALS model given these parameters using MAP@{k}: {s}'.format(k = self.k, s = self.score))
                             print('------------------------------------------------------------------------------------------------------------------------------')     
-                        elif self.metric == 'ndcgAtK'
+                        elif self.metric == 'ndcgAtK':
                             print('Score for ALS model given these parameters using NCDG@{k}: {s}'.format(k = self.k, s = self.score))
                             print('------------------------------------------------------------------------------------------------------------------------------')     
 
