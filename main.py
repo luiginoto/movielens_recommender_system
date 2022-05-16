@@ -88,10 +88,18 @@ def main(spark, in_path, out_path):
     print("NCDG@100 on test set: ", baseline_metrics_test.ndcgAt(100))
     
     
-    best_als_model = ValidatedALS(ratings=X_train, test_ratings=X_test, seed=0).validate(rank=[10, 20], regParam=[0.01], maxIter=[1])
+    best_als_model = ValidatedALS(seed=0)
+    best_als_model.validate(ratings_train=X_train, ratings_val=X_val, rank=[10, 20], regParam=[0.01], maxIter=[1])
     
-    best_user_factors = best_als_model.userFactors
-    best_item_factors = best_als_model.itemFactors
+    print("Evaluating best ALS model")
+    print("MAP@100 on training set: ", best_als_model.evaluate(ratings_test=X_test, top_k=100, metricName='meanAveragePrecision'))
+    print("MAP@100 on test set: ", best_als_model.evaluate(ratings_test=X_test, top_k=100, metricName='meanAveragePrecision'))
+    print("NCDG@100 on training set: ", best_als_model.evaluate(ratings_test=X_test, top_k=100, metricName='ndcgAtK'))
+    print("NCDG@100 on test set: ", best_als_model.evaluate(ratings_test=X_test, top_k=100, metricName='ndcgAtK'))
+    
+    
+    best_user_factors = best_als_model.model.userFactors
+    best_item_factors = best_als_model.model.itemFactors
     
     print()
     print('Exporting User and Item factors of best ALS model into CSV')
