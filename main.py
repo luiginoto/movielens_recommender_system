@@ -87,7 +87,21 @@ def main(spark, in_path, out_path):
     print("NCDG@100 on test set: ", baseline_metrics_test.ndcgAt(100))
     
     
-    als = ValidatedALS(ratings=X_train, test_ratings=X_test, seed=0).validate(rank=[10, 20, 30], regParam=[0.01, 0.1, 1, 10], maxIter=[10, 15])
+    best_als_model = ValidatedALS(ratings=X_train, test_ratings=X_test, seed=0).validate(rank=[10, 20, 30], regParam=[0.01, 0.1, 1, 10], maxIter=[10, 15])
+    
+    best_user_factors = best_als_model.userFactors
+    best_item_factors = best_als_model.itemFactors
+    
+    print()
+    print('Exporting User and Item factors of best ALS model into CSV')
+    
+    best_user_factors.withColumn("features", best_user_factors.features.cast("array<string>"))\
+        .withColumn("features", fn.concat_ws(",",fn.col("features")))\
+        .repartition(1).write.csv(out_path + '/final_model_results/user_factors.csv', mode='overwrite')
+        
+    best_item_factors.withColumn("features", best_item_factors.features.cast("array<string>"))\
+        .withColumn("features", fn.concat_ws(",",fn.col("features")))\
+        .repartition(1).write.csv(out_path + '/final_model_results/item_factors.csv', mode='overwrite')
 
 
 # Only enter this block if we're in main
