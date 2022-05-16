@@ -58,7 +58,7 @@ class ValidatedALS():
 #                        self.test_ratings).drop('timestamp')
 #                    self.score, self.predsAndlabels = self.evaluate(
 #                        self.predictions, top_k, self.metric)
-                    self.score, self.predsAndlabels = self.evaluate(ratings_val, top_k, metric)
+                    self.score = self.evaluate(ratings_val, top_k, metric)
 
                     if verbose:
                         if metric == 'meanAveragePrecision':
