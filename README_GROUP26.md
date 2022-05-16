@@ -56,10 +56,12 @@ spark-submit
 We opted for a more modular approach that enforced more of a OOP approach. Modules provide a handy way to split the code into more files within a namespace; they are nothing but files containing Python code the main program can import if needed which then promotes maintainability and code re-usability. Packages are a handy way to group related modules altogether! Distribution packages we discussed prior then become versioned archive files that contain import packages, modules, and other resource files used for that project run on the cluster.
 
 #### Popularity Baseline
-The ``PopularityBaseline`` class implements a standard popularity baseline model 
-```math
-$P[i] = &Sigma_{u} R_[u,i] / (|R[:,i]| + &beta)$
-```
+The ``PopularityBaseline`` class implements a standard popularity baseline model that gets the utility matrix containing users' ratings and computes the top most popular movies, where popularity is defined as the average rating for each movie.
+ **Parameters:**     
+ - Threshold: The number of ratings a movie needs to have to include it in the training data            
+ - Damping: The damping factor of the model
+
+ 
 What it do? How it work? Salient points of code?
 ```sh
 SOME
