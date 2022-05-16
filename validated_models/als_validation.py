@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from .ALS import CustomALS
+import time
 
 def ALSValidation(X_train, X_val, rank_vals = [10], regParam_vals = [0.1], maxIter_vals = [10], metric_val= 'meanAveragePrecision',\
                                  k_val = 100, verbose = True):
@@ -14,7 +15,10 @@ def ALSValidation(X_train, X_val, rank_vals = [10], regParam_vals = [0.1], maxIt
                     print("Fitting ALS model given parameters: Rank: {rank} | regParam: {regParam} | maxIter: {maxIter} ".format(
                     rank=rank, regParam=regParam, maxIter=maxIter))
                 als = CustomALS(rank = rank, regParam=regParam, maxIter=maxIter)
+                start = time.time()
                 als.fit(X_train)
+                end = time.time()
+                tot_time = end - start
                 als_metrics_val = als.evaluate(X_val)
                 if metric_val == 'meanAveragePrecision':
                     val_score = als_metrics_val.meanAveragePrecision
@@ -44,5 +48,6 @@ def ALSValidation(X_train, X_val, rank_vals = [10], regParam_vals = [0.1], maxIt
     print("Best ALS model given parameters using {m}@{k}: Rank: {rank} | regParam: {regParam} | maxIter: {maxIter}".format(
         rank=best_als_model.rank, regParam=best_als_model.regParam, maxIter=best_als_model.maxIter, m = metric_val, k = k_val))
     print("Best ALS model score given these parameters: ", best_score)
+    print("Average model fitting time for the given dataset: ",tot_time)
     return best_als_model
     
