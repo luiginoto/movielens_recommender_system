@@ -78,7 +78,7 @@ def main(spark, in_path, out_path):
             best_score = val_score
             best_baseline_model = baseline
 
-    print('Best Popularity baseline model: 's, best_baseline_model)
+    print('Best Popularity baseline model: ', best_baseline_model)
     print("Evaluating best Popularity baseline model")
     baseline_metrics_train = baseline.evaluate(best_baseline_model.results, X_train)
     baseline_metrics_test = baseline.evaluate(best_baseline_model.results, X_test)
@@ -88,7 +88,7 @@ def main(spark, in_path, out_path):
     print("NCDG@100 on test set: ", baseline_metrics_test.ndcgAt(100))
     
     
-    best_als_model = ValidatedALS(ratings=X_train, test_ratings=X_test, seed=0).validate(rank=[10, 20, 30], regParam=[0.01, 0.1, 1, 10], maxIter=[10, 15])
+    best_als_model = ValidatedALS(ratings=X_train, test_ratings=X_test, seed=0).validate(rank=[10, 20], regParam=[0.01], maxIter=[1])
     
     best_user_factors = best_als_model.userFactors
     best_item_factors = best_als_model.itemFactors
@@ -113,6 +113,7 @@ if __name__ == "__main__":
         .config('spark.shuffle.useOldFetchProtocol', 'true')\
         .config('spark.shuffle.service.enabled', 'true')\
         .config('dynamicAllocation.enabled', 'true')\
+        .config('spark.task.maxFailures', '2')\
         .getOrCreate()
 
     # Get user netID from the command line
