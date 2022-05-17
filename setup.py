@@ -12,7 +12,7 @@ with open('README.md') as f:
 
 setup(
     name='Group26_MovieLens',
-    version='0.5.0',
+    version='1.0.0',
     description='Package for first iteration of final project',
     long_description=readme,
     author='group26',

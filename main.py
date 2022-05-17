@@ -51,7 +51,7 @@ def main(spark, in_path, out_path):
 
     ratings_per_movie = ratings_train.groupby('movieId').agg({"rating":"count"})
     ratings_per_movie.describe().show()
- 
+
     print("Training data size : ", X_train.count())
     print("Validation data size : ", X_val.count())
     print("Test data size : ", X_test.count())
@@ -86,15 +86,14 @@ def main(spark, in_path, out_path):
     print("MAP@100 on test set: ", baseline_metrics_test.meanAveragePrecision)
     print("NCDG@100 on training set: ", baseline_metrics_train.ndcgAt(100))
     print("NCDG@100 on test set: ", baseline_metrics_test.ndcgAt(100))
-    
-    
+ 
     best_als_model = ValidatedALS(seed=0)
-    best_als_model.validate(ratings_train=X_train, ratings_val=X_val, rank=[10, 20], regParam=[0.01], maxIter=[1])
+    best_als_model.validate(ratings_train=X_train, ratings_val=X_val, rank=[10, 15, 20], regParam=[0.001, 0.01, 0.1], maxIter=[10, 15, 20])
     
     print("Evaluating best ALS model")
-    print("MAP@100 on training set: ", best_als_model.evaluate(ratings_test=X_test, top_k=100, metricName='meanAveragePrecision'))
+    print("MAP@100 on training set: ", best_als_model.evaluate(ratings_test=X_train, top_k=100, metricName='meanAveragePrecision'))
     print("MAP@100 on test set: ", best_als_model.evaluate(ratings_test=X_test, top_k=100, metricName='meanAveragePrecision'))
-    print("NCDG@100 on training set: ", best_als_model.evaluate(ratings_test=X_test, top_k=100, metricName='ndcgAtK'))
+    print("NCDG@100 on training set: ", best_als_model.evaluate(ratings_test=X_train, top_k=100, metricName='ndcgAtK'))
     print("NCDG@100 on test set: ", best_als_model.evaluate(ratings_test=X_test, top_k=100, metricName='ndcgAtK'))
     
     
@@ -117,7 +116,7 @@ def main(spark, in_path, out_path):
 if __name__ == "__main__":
 
     spark = SparkSession.builder.appName('project')\
-        .config('spark.submit.pyFiles', 'Group26_MovieLens-0.4.2-py3-none-any.zip')\
+        .config('spark.submit.pyFiles', 'Group26_MovieLens-1.0.0-py3-none-any.zip')\
         .config('spark.shuffle.useOldFetchProtocol', 'true')\
         .config('spark.shuffle.service.enabled', 'true')\
         .config('dynamicAllocation.enabled', 'true')\

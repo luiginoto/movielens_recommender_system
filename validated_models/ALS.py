@@ -54,10 +54,6 @@ class ValidatedALS():
                     tot_times.append(tot_time)
                     self.fitted = True
 
-#                    self.predictions = self.model.transform(
-#                        self.test_ratings).drop('timestamp')
-#                    self.score, self.predsAndlabels = self.evaluate(
-#                        self.predictions, top_k, self.metric)
                     self.score = self.evaluate(ratings_val, top_k, metric)
 
                     if verbose:
