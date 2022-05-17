@@ -1,7 +1,4 @@
 # Group 26: MovieLens - Basic Recommender Systems and Extensions
-## _A additional README, because we LOVE documentation_
-
-[![N|Solid](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftownsquare.media%2Fsite%2F442%2Ffiles%2F2012%2F08%2Fbest-worst-summer-2012-movies.jpg%3Fw%3D1200%26h%3D0%26zc%3D1%26s%3D0%26a%3Dt%26q%3D89&f=1&nofb=1)](https://github.com/nyu-big-data/final-project-group-26)
 
 The following details salient features of code and the process for execution:
 
@@ -12,7 +9,7 @@ The following details salient features of code and the process for execution:
 - Run ALS model selection from main routine
 - Write relevant csv files for post-processing on user HDFS
 
-Let it be known that we hereby implement the requirements set by the legendary [Brian McFee](https://steinhardt.nyu.edu/people/brian-mcfee) on the provided project description README found in our [repo](https://github.com/nyu-big-data/final-project-group-26).
+Let it be known that we hereby implement the requirements set on the provided project description README found in our [repo](https://github.com/nyu-big-data/final-project-group-26).
 
 > In the final project, you will apply the tools you have learned in this class to solve a realistic,
 > large-scale, applied problem. Specifically, you will build and evaluate a collaborative-filter based recommender system. Two extensions will be created for full credit. 
@@ -55,31 +52,79 @@ spark-submit
 ### Installing Distribution Packges on the Cluster: Packaging ```validated_models``` and ```dataset_split``` Modules 
 We opted for a more modular approach that enforced more of a OOP approach. Modules provide a handy way to split the code into more files within a namespace; they are nothing but files containing Python code the main program can import if needed which then promotes maintainability and code re-usability. Packages are a handy way to group related modules altogether! Distribution packages we discussed prior then become versioned archive files that contain import packages, modules, and other resource files used for that project run on the cluster.
 
-#### Popularity Baseline
+### Dataset Split
+As regards the training set, for each user in the dataset, a percentage of observations (``train_ratio``) is selected to be included in the training set based on the value of the timestamp (older ratings are included in the training). The remaining data is then splitted in a way that ``user_ratio`` of the users are included int thevalidation set and the remaining on the test set.
+We thus include a portion of the history of each user in the training set, while for the remaining observations we perfrom a user-based split, where the observations associated to ``user_ratio`` of the users fall into the validation set while the remaining go into the test set.
+
+### Popularity Baseline
 The ``PopularityBaseline`` class implements a standard popularity baseline model that gets the utility matrix containing users' ratings and computes the top most popular movies, where popularity is defined as the average rating for each movie.
  
  **Parameters:**     
- - Threshold: The number of ratings a movie needs to have to include it in the training data            
- - Damping: The damping factor of the model
+ - threshold: the number of ratings a movie needs to have to be included in the training data            
+ - damping: the damping factor of the model
 
+```fit(ratings, top_n=100):```
+
+Fit the recommender with the train rating data and computes the ``top_n`` recommendations.
+
+**Parameters:**
+- ratings: the train rating data
+- top_n: the number of recommendations made by the model
+
+**Returns:**
+- results: the dataframe with the ``top_n`` recommendations in descending order (from most popular to less popular)
+
+```evaluate(results, test_set):```
+
+First determines the ground truth by getting the movies that the users enjoyed (rating > 2.5). It returns a ``RankingMetrics`` object to compute the preferred metrics.
+
+**Parameters:**
+- results: the dataframe with the recommendations in descending order
+- test_set: the test rating data
+
+**Returns:**
+- metrics: a ``RankingMetrics`` object to compute the desired metrics
+
+### Alternating Least Squares (ALS) 
+The ``ValidateALS`` class wraps an ``ALS`` object from ``pyspark.ml.recommendation``. It performs evaluation of an ``ALS`` object and implements a standard validation process over given sets of parameters. 
+
+**Parameters:** 
+- seed: the seed to be used in the ``ALS`` class
  
-What it do? How it work? Salient points of code?
-```sh
-SOME
-CODE
-HERE
-```
-#### Alternating Least Squares (ALS) 
-What it do? How it work? Salient points of code?
-```sh
-SOME
-CODE
-HERE
-```
+```validate(ratings_train, ratings_val, top_k, rank, regParam, maxIter, ColdStartStrategy, metric, verbose):```
+ 
+Performs validation of the ALS model over the given sets of parameter, outputting the best performing model.
+ 
+**Parameters:**
+- ratings_train: the train rating data
+- ratings_val: the validation rating data
+- top_k: the number of recommendations for each user
+- rank: the list of rank values for the validation of the ALS
+- regParam: the list of regression parameters for the validation of the ALS
+- maxIter: the list of maximum iterations for the validation of the ALS
+- ColdStartStrategy: the paramater to implement the cold start strategy in the ALS, default set to "nan"
+- metric: the type of metric used to evaluate the models perfromances
+- verbose: set to True to print the intermediate results of the validation
 
+
+**Returns:**
+- self.model: the model fitted on the best parameter configuration
+
+```evaluate(ratings_test, top_k, metricName):```
+
+To evaluate the ALS models fitted during validation. Given a test set computes the ground truth by selecting the movies with rating > 2.5, and compares them to the ``top_k`` user specific recomendations by using a ``RankingEvaluator`` object.
+
+**Parameters:**
+- ratings_test: the test rating data
+- top_k: the number of recommendations to produce for each user
+- metricName: the metric used to evaluate the model
+
+**Returns:**
+- score: the score for the fitted ALS model on the given test rating data
 
 [//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen. Thanks SO - http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax)
 
    [wheel]: <https://wheel.readthedocs.io/en/stable/>
    [Python setup tools]: <https://grimoire.carcano.ch/blog/python-setup-tools/>
    [PyFiles on Spark]: <https://newbedev.com/i-can-t-seem-to-get-py-files-on-spark-to-work/>
+
