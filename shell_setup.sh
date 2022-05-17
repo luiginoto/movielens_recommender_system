@@ -19,6 +19,3 @@ module load anaconda3/2020.11
 module load spark/3.0.1
 
 python build.py
-
-# remove this soon or we will be sued...
-hfs -rm -r ratings_*
