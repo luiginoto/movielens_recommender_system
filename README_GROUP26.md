@@ -145,6 +145,9 @@ We implement the function ``SingleMachineValidation`` to perfrom validation of l
 - best_fittable: the fitted best model used to perform recommendations
 
 ## Extension 2: Fast Search
+Using the user and item factor matrices of the ALS model with the best hyperparameter configurations, an implementation accelerated search at query time is provided with the help of a spatial data structure. The fast search implementation has then been compared to the brute-force method. The [annoy](https://github.com/spotify/annoy) library has been used to implement the fast search method.
+
+# Brute Force
 
 [//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen. Thanks SO - http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax)
 
