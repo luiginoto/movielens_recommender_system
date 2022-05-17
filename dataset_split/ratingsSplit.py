@@ -3,7 +3,7 @@ import sys
 from . import utils
 
 
-def ratingsSplit(spark, dirstring, small, column_name, train_ratio=0.6, user_ratio=0.5, seed = 69):
+def ratingsSplit(spark, dirstring, small, column_name, train_ratio=0.6, user_ratio=0.5, seed = 15):
     # TODO you can do error checking for prop limits here if needed, i.e if lower greater than upper, is valid, etc
     rdd, verified_column_name = utils.readRDD(
         spark, dirstring, small, column_name)
