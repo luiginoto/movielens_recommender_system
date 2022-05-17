@@ -59,11 +59,13 @@ class ValidatedALS():
                     if verbose:
                         if metric == 'meanAveragePrecision':
                             print('Score for ALS model given these parameters using MAP@{k}: {s}'.format(k = top_k, s = self.score))
+                            print("Model fitting time for the given dataset: ",tot_time)
                             print('------------------------------------------------------------------------------------------------------------------------------')     
                         elif metric == 'ndcgAtK':
                             print('Score for ALS model given these parameters using NCDG@{k}: {s}'.format(k = top_k, s = self.score))
+                            print("Model fitting time for the given dataset: ",tot_time)
                             print('------------------------------------------------------------------------------------------------------------------------------')     
-                        print("Model fitting time for the given dataset: ",tot_time)
+                        
 
                     if self.score > best_score:
                         best_model = self.model
