@@ -52,11 +52,11 @@ spark-submit
 ### Installing Distribution Packges on the Cluster: Packaging ```validated_models``` and ```dataset_split``` Modules 
 We opted for a more modular approach that enforced more of a OOP approach. Modules provide a handy way to split the code into more files within a namespace; they are nothing but files containing Python code the main program can import if needed which then promotes maintainability and code re-usability. Packages are a handy way to group related modules altogether! Distribution packages we discussed prior then become versioned archive files that contain import packages, modules, and other resource files used for that project run on the cluster.
 
-### Dataset Split
+## Dataset Split
 As regards the training set, for each user in the dataset, a percentage of observations (``train_ratio``) is selected to be included in the training set based on the value of the timestamp (older ratings are included in the training). The remaining data is then splitted in a way that ``user_ratio`` of the users are included int thevalidation set and the remaining on the test set.
 We thus include a portion of the history of each user in the training set, while for the remaining observations we perfrom a user-based split, where the observations associated to ``user_ratio`` of the users fall into the validation set while the remaining go into the test set.
 
-### Popularity Baseline
+## Popularity Baseline
 The ``PopularityBaseline`` class implements a standard popularity baseline model that gets the utility matrix containing users' ratings and computes the top most popular movies, where popularity is defined as the average rating for each movie.
  
  **Parameters:**     
@@ -85,7 +85,7 @@ First determines the ground truth by getting the movies that the users enjoyed (
 **Returns:**
 - metrics: a ``RankingMetrics`` object to compute the desired metrics
 
-### Alternating Least Squares (ALS) 
+## Alternating Least Squares (ALS) 
 The ``ValidateALS`` class wraps an ``ALS`` object from ``pyspark.ml.recommendation``. It performs evaluation of an ``ALS`` object and implements a standard validation process over given sets of parameters. 
 
 **Parameters:** 
@@ -121,6 +121,30 @@ To evaluate the ALS models fitted during validation. Given a test set computes t
 
 **Returns:**
 - score: the score for the fitted ALS model on the given test rating data
+
+## Extension 1: Comparison to Single Machine Implementation
+The perfromances (accuracy and time to fit) obtained from the Spark parallel ALS runned on the cluster are compared to the ones obtained from the ALS runned on a single machine. To implement the ALS on the single machine the [lenskit](https://lkpy.readthedocs.io/en/stable/index.html) library is used. 
+
+We implement the function ``SingleMachineValidation`` to perfrom validation of lenskit's ALS algorithm on the same sets of parameters used in the Spark version for the sake of comparison. 
+
+```SingleMachineImplementation(X_train, X_val, rank_vals, regParam_vals, maxIter_vals, metric_val, k_val, verbose, size):```
+
+**Parameters:**
+- X_train: the train rating data
+- X_val: the validation rating data
+- rank_vals: the list of rank values for the validation of the ALS
+- regParam_vals: the list of regression parameters for the validation of the ALS
+- maxIter_vals: the list of maximum iterations for the validation of the ALS
+- metric_val: the type of metric used to evaluate the models perfromances
+- k_val: the number of recommendations for each user
+- verbose: True if needed all the intermediate results
+- size: the size of the dataset used (either "small" or "big")
+
+**Returns:**
+- best_model: the best model configuartions obtained from validation
+- best_fittable: the fitted best model used to perform recommendations
+
+## Extension 2: Fast Search
 
 [//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen. Thanks SO - http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax)
 
