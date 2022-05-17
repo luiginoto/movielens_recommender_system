@@ -53,7 +53,7 @@ spark-submit
 We opted for a more modular approach that enforced more of a OOP approach. Modules provide a handy way to split the code into more files within a namespace; they are nothing but files containing Python code the main program can import if needed which then promotes maintainability and code re-usability. Packages are a handy way to group related modules altogether! Distribution packages we discussed prior then become versioned archive files that contain import packages, modules, and other resource files used for that project run on the cluster.
 
 ## Dataset Split
-As regards the training set, for each user in the dataset, a percentage of observations (``train_ratio``) is selected to be included in the training set based on the value of the timestamp (older ratings are included in the training). The remaining data is then splitted in a way that ``user_ratio`` of the users are included int thevalidation set and the remaining on the test set.
+As regards the training set, for each user in the dataset, a percentage of observations (``train_ratio``) is selected to be included in the training set based on the value of the timestamp (older ratings are included in the training). The remaining data is then splitted in a way that ``user_ratio`` of the users are included in thevalidation set and the remaining on the test set.
 We thus include a portion of the history of each user in the training set, while for the remaining observations we perfrom a user-based split, where the observations associated to ``user_ratio`` of the users fall into the validation set while the remaining go into the test set.
 
 ## Popularity Baseline
