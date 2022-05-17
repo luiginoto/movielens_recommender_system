@@ -61,7 +61,7 @@ def main(spark, in_path, out_path):
     
     print("Fitting Popularity baseline model")
     print("Tuning hyperparameters based on Mean Average Precision")
-    damping_values = [0, 5, 10, 15, 20]
+    damping_values = [0, 5, 10, 15, 20, 30, 40, 50]
     best_score = 0
     best_baseline_model = None
     for damping in damping_values:
