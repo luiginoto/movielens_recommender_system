@@ -52,7 +52,7 @@ def readRDD(spark, dirstring, small, column_name):
             return spark.read.csv(dir + 'ratings.csv', header=True, schema='userId INT, movieId INT, rating FLOAT, timestamp INT'), 'ratings'
 
 
-def ratings_split(rdd, train_ratio=0.6, user_ratio=0.5, seed = 69):
+def ratings_split(rdd, train_ratio=0.6, user_ratio=0.5, seed = 15):
     windowSpec = Window.partitionBy('userId').orderBy('timestamp')
 
     counts = rdd.groupBy('userId').agg(fn.count('rating').alias('n_ratings'))
