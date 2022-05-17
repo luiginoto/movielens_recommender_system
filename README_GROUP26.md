@@ -3,8 +3,7 @@
 The following details salient features of code and the process for execution:
 
 ## Overview
-- Sourcing the shell script will create Hadoop aliases, Spark Session object, load modules on the cluster environment, and run automatic building of...
-- Packaging modules on wheels and zipping them up cluster use automatically
+- Sourcing the shell script will create Hadoop aliases, Spark Session object, load modules on the cluster environment, and run automatic building of packaging modules on wheels and zipping them up for cluster use automatically
 - Run popularity baseline model selection from main routine 
 - Run ALS model selection from main routine
 - Write relevant csv files for post-processing on user HDFS
