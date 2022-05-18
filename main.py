@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
-# Use getpass to obtain user netID
+
 import getpass
 from validated_models.ALS import ValidatedALS
 from dataset_split.utils import readRDD
 from validated_models.popularity import PopularityBaseline
 from pyspark.ml.recommendation import ALS
 import pyspark.sql.functions as fn
-
-
-# And pyspark.sql to get the spark session
 from pyspark.sql import SparkSession
 import dataset_split
 
