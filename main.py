@@ -13,30 +13,16 @@ from pyspark.sql import SparkSession
 import dataset_split
 
 
-#import ALS_custom
-
 
 def main(spark, in_path, out_path):
-    '''
-    Parameters
-    ----------
-    spark : SparkSession object
-    netID : string, netID of student to find files in HDFS
-    '''
+    
     print('LOADING....')
     print('')
 
     print('Splitting the ratings dataset into training, validation and test set')
     ratings_train, ratings_test, ratings_validation = dataset_split.ratingsSplit(
-        spark, in_path, small=True, column_name='ratings', train_ratio=0.8, user_ratio=0.5)
+        spark, in_path, small=False, column_name='ratings', train_ratio=0.8, user_ratio=0.5)
     ratings_train.show()
-
-    #movie_title_df, _ = readRDD(spark, in_path, small=True, column_name = 'movies')
-
-    # split into training and testing sets
-    # ratings_train.write.csv(f'{out_path}/ratings_train.csv')
-    # ratings_validation.write.csv(f'{out_path}/ratings_validation.csv')
-    # ratings_test.write.csv(f'{out_path}/ratings_test.csv')
 
     print("Distinct movies: ", ratings_train.select(
         "movieId").distinct().count())
@@ -61,7 +47,7 @@ def main(spark, in_path, out_path):
     
     print("Fitting Popularity baseline model")
     print("Tuning hyperparameters based on Mean Average Precision")
-    damping_values = [0, 5, 10, 15, 20, 30, 40, 50]
+    damping_values = [10, 20, 30, 40, 50]
     best_score = 0
     best_baseline_model = None
     for damping in damping_values:
@@ -88,14 +74,13 @@ def main(spark, in_path, out_path):
     print("NCDG@100 on test set: ", baseline_metrics_test.ndcgAt(100))
  
     best_als_model = ValidatedALS(seed=0)
-    best_als_model.validate(ratings_train=X_train, ratings_val=X_val, rank=[10, 15, 20], regParam=[0.001, 0.01, 0.1], maxIter=[10, 15, 20])
+    best_als_model.validate(ratings_train=X_train, ratings_val=X_val, rank=[20, 30, 40, 50, 60], regParam=[0.001, 0.01, 0.1, 1], maxIter=[25, 30, 35, 40, 45])
     
     print("Evaluating best ALS model")
     print("MAP@100 on training set: ", best_als_model.evaluate(ratings_test=X_train, top_k=100, metricName='meanAveragePrecision'))
     print("MAP@100 on test set: ", best_als_model.evaluate(ratings_test=X_test, top_k=100, metricName='meanAveragePrecision'))
     print("NCDG@100 on training set: ", best_als_model.evaluate(ratings_test=X_train, top_k=100, metricName='ndcgAtK'))
     print("NCDG@100 on test set: ", best_als_model.evaluate(ratings_test=X_test, top_k=100, metricName='ndcgAtK'))
-    
     
     best_user_factors = best_als_model.model.userFactors
     best_item_factors = best_als_model.model.itemFactors
@@ -127,10 +112,10 @@ if __name__ == "__main__":
     netID = getpass.getuser()
 
     # Get path of ratings file
-    in_path = f'hdfs:/user/{netID}'  # sys.argv[1]
+    in_path = f'hdfs:/user/{netID}'
 
     # Get destination directory of training, validation and test set files
-    out_path = f'hdfs:/user/{netID}'  # sys.argv[2]
+    out_path = f'hdfs:/user/{netID}'
 
     # Call our main routine
     main(spark, in_path, out_path)
