@@ -167,14 +167,9 @@ n_trees_list = [100, 500, 1000]
 search_k_list = [100, 1000, 10000, 50000, 100000]
 
 
-# comparison(user_factors_array=user_factors_array, item_factors_array=item_factors_array,
-#            user_ids=user_factors['userId'], item_ids=item_factors['movieId'], n_queries=100,
-#            top_k=100, n_trees_list=n_trees_list, search_k_list=search_k_list)
-
-
 comparison(user_factors_array=user_factors_array, item_factors_array=item_factors_array,
-           user_ids=user_factors['userId'], item_ids=item_factors['movieId'], n_queries=user_factors_array.shape[0],
-           top_k=100, n_trees_list=[100], search_k_list=[50000])
+            user_ids=user_factors['userId'], item_ids=item_factors['movieId'], n_queries=100,
+            top_k=100, n_trees_list=n_trees_list, search_k_list=search_k_list)
     
     
 
