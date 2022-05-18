@@ -71,7 +71,8 @@ def main(spark, in_path, out_path):
     print("NCDG@100 on test set: ", baseline_metrics_test.ndcgAt(100))
  
     best_als_model = ValidatedALS(seed=0)
-    best_als_model.validate(ratings_train=X_train, ratings_val=X_val, rank=[20, 30, 40, 50, 60], regParam=[0.001, 0.01, 0.1, 1], maxIter=[25, 30, 35, 40, 45])
+    best_als_model.validate(ratings_train=X_train, ratings_val=X_val, rank=[20, 30, 40, 50, 60],
+                            regParam=[0.001, 0.01, 0.1, 1], maxIter=[25, 30, 35, 40, 45])
     
     print("Evaluating best ALS model")
     print("MAP@100 on training set: ", best_als_model.evaluate(ratings_test=X_train, top_k=100, metricName='meanAveragePrecision'))
