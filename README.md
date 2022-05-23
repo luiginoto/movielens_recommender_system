@@ -1,11 +1,10 @@
-# MovieLens - Recommender System and Extensions
+# MovieLens Recommender System and Extensions
 
 Final Project for the Spring 2022 DSGA-1004 Big Data course\
 Authors: Guilherme Albertini, Giacomo Bugli, Luigi Noto
 
 ## Abstract
-We build and evaluate a collaborative-filtering based recommender system with Spark using
-the [MovieLens dataset](https://grouplens.org/datasets/movielens/latest/) subject to the requirements set for the final project of the Spring 2022 DSGA-1004 Big Data course. We compare the Spark’s parallel ALS model to [lenskit](https://lkpy.readthedocs.io/en/stable/index.html) single-machine implementation in terms of efficiency and model performance. Finally, we implement accelerated search at query time using [annoy](https://github.com/spotify/annoy) spatial data structure, and compare this fast search method to the brute force approach in terms of query efficiency and quality of recommendation.
+We build and evaluate a collaborative-filtering based recommender system with [Spark alternating least squares (ALS)](https://spark.apache.org/docs/3.0.1/ml-collaborative-filtering.html) implementation using the [MovieLens dataset](https://grouplens.org/datasets/movielens/latest/) subject to the requirements set for the final project of the Spring 2022 DSGA-1004 Big Data course. We compare the Spark’s parallel ALS model to [lenskit](https://lkpy.readthedocs.io/en/stable/index.html) single-machine implementation in terms of efficiency and model performance. Finally, we implement accelerated search at query time using [annoy](https://github.com/spotify/annoy) spatial data structure, and compare this fast search method to the brute force approach in terms of query efficiency and quality of recommendation.
 
 ## Implementation
 The following details salient features of code and the process for execution:
