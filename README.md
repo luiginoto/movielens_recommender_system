@@ -15,7 +15,7 @@ The following details salient features of code and the process for execution:
 - Run ALS model selection from main routine
 - Write relevant csv files for post-processing on user HDFS
 
-Let it be known that we hereby implement the requirements set on the provided project description README found in our [repo](https://github.com/nyu-big-data/final-project-group-26).
+Let it be known that we hereby implement the requirements set on the provided project description.
 
 > In the final project, you will apply the tools you have learned in this class to solve a realistic,
 > large-scale, applied problem. Specifically, you will build and evaluate a collaborative-filter based recommender system. Two extensions will be created for full credit. 
