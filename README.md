@@ -1,6 +1,6 @@
 # MovieLens Recommender System and Extensions
 
-Final Project for the Spring 2022 DSGA-1004 Big Data course\
+Final Project for the Spring 2022 DS-GA 1004 Big Data course\
 Authors: Guilherme Albertini, Giacomo Bugli, Luigi Noto
 
 ## Abstract
@@ -27,9 +27,6 @@ Let it be known that we hereby implement the requirements set on the provided pr
 - [Anaconda 2020.11](https://www.anaconda.com/blog/individual-edition-2020-11) - Anaconda module providing needed libraries for running source code
 - [Spark 3.0.1](https://spark.apache.org/docs/3.0.1/) - Large-scale data processing done on Apache Spark
 - [NYU Peele Cluster](https://www.nyu.edu/life/information-technology/research-computing-services/high-performance-computing/high-performance-computing-nyu-it/hpc-supercomputer-clusters/peel-hadoop.html) - Peel is NYU's newest Hadoop cluster
-
-
-And of course the code is found in our Github repository [here](https://github.com/nyu-big-data/final-project-group-26)!
 
 ## Background on Packaging for Nerds (Optional)
 
